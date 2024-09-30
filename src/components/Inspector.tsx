@@ -7,7 +7,7 @@ const Inspector = () => {
         topLeftResizerDelta,
         topRightResizerDelta,
         bottomResizerDelta
-    } = useSelector( (state: any) => state.editor);
+    } = useSelector( (state: any) => state.window);
 
     const inspectorRef = useRef<HTMLDivElement>(null);
     const [inspectorWidth, setInspectorWidth] = useState<number>(0)

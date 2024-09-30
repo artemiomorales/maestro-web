@@ -7,7 +7,7 @@ const Hierarchy = () => {
         topLeftResizerDelta,
         topRightResizerDelta,
         bottomResizerDelta
-    } = useSelector( (state: any) => state.editor);
+    } = useSelector( (state: any) => state.window);
 
     const hierarchyRef = useRef<HTMLDivElement>(null);
     const [hierarchyWidth, setHierarchyWidth] = useState<number>(0)

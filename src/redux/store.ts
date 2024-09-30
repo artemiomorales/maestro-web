@@ -1,10 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
-import editorReducer from './slices/editorSlice';
+import windowReducer from './slices/windowSlice';
 import timelineReducer from './slices/timelineSlice';
 
 export const store = configureStore({
   reducer: {
-    editor: editorReducer,
+    window: windowReducer,
     timeline: timelineReducer,
   },
 });

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setPreviewWindowHeight } from '../../redux/slices/editorSlice';
+import { setPreviewWindowHeight } from '../../redux/slices/windowSlice';
 
 const StageContainer = () => {
     const {
@@ -8,7 +8,7 @@ const StageContainer = () => {
         topLeftResizerDelta,
         topRightResizerDelta,
         bottomResizerDelta
-    } = useSelector( (state: any) => state.editor);
+    } = useSelector( (state: any) => state.window);
     
     const stageContainerRef = useRef<HTMLDivElement>(null);
     const [stageWidth, setStageWidth] = useState<number>(0)
@@ -55,7 +55,7 @@ const Stage = () => {
         topRightResizerDelta,
         bottomResizerDelta,
         previewWindowHeight,
-    } = useSelector( (state: any) => state.editor);
+    } = useSelector( (state: any) => state.window);
 
     const stageRef = useRef<HTMLDivElement>(null);
 

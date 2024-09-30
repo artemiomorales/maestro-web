@@ -9,7 +9,7 @@ import {
     setTopRightResizerDelta,
     setBottomResizerDelta,
     setResizerActive
-} from '../redux/slices/editorSlice';
+} from '../redux/slices/windowSlice';
 import { useDispatch, useSelector } from 'react-redux';
 
 const Editor = () => {
@@ -18,10 +18,10 @@ const Editor = () => {
         topLeftResizerDelta,
         topRightResizerDelta,
         bottomResizerDelta
-    } = useSelector( (state: any) => state.editor);
+    } = useSelector( (state: any) => state.window);
 
     const dispatch = useDispatch();
-    const store = useSelector( (state: any) => state.editor);
+    const store = useSelector( (state: any) => state.window);
 
     const topWidgetRef = useRef<HTMLDivElement>(null);
     const bottomWidgetRef = useRef<HTMLDivElement>(null);

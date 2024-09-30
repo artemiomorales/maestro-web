@@ -24,8 +24,8 @@ const initialState: EditorState = {
     resizerActive: null,
 };
 
-const editorSlice = createSlice({
-  name: 'editor',
+const windowSlice = createSlice({
+  name: 'window',
   initialState,
   reducers: {
     setCurrentTime: (state, action: PayloadAction<number>) => {
@@ -72,6 +72,6 @@ export const {
     setBottomResizerDelta,
     setPreviewWindowHeight,
     setScene
-} = editorSlice.actions;
+} = windowSlice.actions;
 
-export default editorSlice.reducer;
+export default windowSlice.reducer;
