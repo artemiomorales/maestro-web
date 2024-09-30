@@ -1,13 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
-import Stage from './Stage';
+import Preview from './Preview';
 import Timeline from './Timeline';
 import Controls from './Controls';
 import Hierarchy from './Hierarchy';
 import Inspector from './Inspector';
 import {
-    setTopLeftResizerPosition,
-    setTopRightResizerPosition,
-    setBottomResizerPosition,
+    setTopLeftResizerDelta,
+    setTopRightResizerDelta,
+    setBottomResizerDelta,
     setResizerActive
 } from '../redux/slices/editorSlice';
 import { useDispatch, useSelector } from 'react-redux';
@@ -15,9 +15,9 @@ import { useDispatch, useSelector } from 'react-redux';
 const Editor = () => {
     const {
         resizerActive,
-        topLeftResizerPosition,
-        topRightResizerPosition,
-        bottomResizerPosition
+        topLeftResizerDelta,
+        topRightResizerDelta,
+        bottomResizerDelta
     } = useSelector( (state: any) => state.editor);
 
     const dispatch = useDispatch();
@@ -44,25 +44,25 @@ const Editor = () => {
     const handleMouseMove = (e: any) => {
         switch(store.resizerActive) {
             case "topLeft":
-            dispatch(setTopLeftResizerPosition( (startXDrag - e.clientX) * -1));
+            dispatch(setTopLeftResizerDelta( (startXDrag - e.clientX) * -1));
             break;
 
             case "topRight":
-            dispatch(setTopRightResizerPosition( (startXDrag - e.clientX) * -1));
+            dispatch(setTopRightResizerDelta( (startXDrag - e.clientX) * -1));
             break;
 
             case "bottom":
-            dispatch(setBottomResizerPosition( startYDrag - e.clientY));
+            dispatch(setBottomResizerDelta( startYDrag - e.clientY));
             break;
         }
     }
 
     useEffect(() => {
         if (topWidgetRef.current && bottomWidgetRef.current && resizerActive === "bottom") {
-            bottomWidgetRef.current.style.flexBasis = `${bottomWidgetHeight + bottomResizerPosition}px`;
-            topWidgetRef.current.style.flexBasis = `${topWidgetHeight - bottomResizerPosition}px`;
+            bottomWidgetRef.current.style.flexBasis = `${bottomWidgetHeight + bottomResizerDelta}px`;
+            topWidgetRef.current.style.flexBasis = `${topWidgetHeight - bottomResizerDelta}px`;
         }
-    }, [topLeftResizerPosition, topRightResizerPosition, bottomResizerPosition]);
+    }, [topLeftResizerDelta, topRightResizerDelta, bottomResizerDelta]);
 
     const handleMouseUp = (e: any) => {
         dispatch(setResizerActive(null));
@@ -87,7 +87,7 @@ const Editor = () => {
                         setStartXDrag(e.clientX);
                     }}
                 ></div>
-                <Stage />
+                <Preview />
                 <div className="resizer resizer-ew top-right-resizer"
                     onMouseDown={ (e) => {
                         dispatch(setResizerActive("topRight"));

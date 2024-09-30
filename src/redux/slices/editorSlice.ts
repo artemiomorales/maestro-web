@@ -5,9 +5,10 @@ interface EditorState {
     duration: number;
     isPlaying: boolean;
     scene: object;
-    topLeftResizerPosition: number;
-    topRightResizerPosition: number;
-    bottomResizerPosition: number;
+    topLeftResizerDelta: number;
+    topRightResizerDelta: number;
+    bottomResizerDelta: number;
+    previewWindowHeight: number;
     resizerActive: "topLeft" | "topRight" | "bottom" | null;
 }
 
@@ -16,9 +17,10 @@ const initialState: EditorState = {
     duration: 0,
     isPlaying: false,
     scene: {},
-    topLeftResizerPosition: 0,
-    topRightResizerPosition: 0,
-    bottomResizerPosition: 0,
+    topLeftResizerDelta: 0,
+    topRightResizerDelta: 0,
+    bottomResizerDelta: 0,
+    previewWindowHeight: 0,
     resizerActive: null,
 };
 
@@ -41,14 +43,17 @@ const editorSlice = createSlice({
     setResizerActive: (state, action: PayloadAction<"topLeft" | "topRight" | "bottom" | null>) => {
         state.resizerActive = action.payload;
     },
-    setTopLeftResizerPosition: (state, action: PayloadAction<number>) => {
-        state.topLeftResizerPosition = action.payload;
+    setTopLeftResizerDelta: (state, action: PayloadAction<number>) => {
+        state.topLeftResizerDelta = action.payload;
     },
-    setTopRightResizerPosition: (state, action: PayloadAction<number>) => {
-        state.topRightResizerPosition = action.payload;
+    setTopRightResizerDelta: (state, action: PayloadAction<number>) => {
+        state.topRightResizerDelta = action.payload;
     },
-    setBottomResizerPosition: (state, action: PayloadAction<number>) => {
-        state.bottomResizerPosition = action.payload;
+    setBottomResizerDelta: (state, action: PayloadAction<number>) => {
+        state.bottomResizerDelta = action.payload;
+    },
+    setPreviewWindowHeight: (state, action: PayloadAction<number>) => {
+        state.previewWindowHeight = action.payload;
     },
     setScene: (state, action: PayloadAction<object>) => {
         state.scene = action.payload;
@@ -62,9 +67,10 @@ export const {
     play,
     pause,
     setResizerActive,
-    setTopLeftResizerPosition,
-    setTopRightResizerPosition,
-    setBottomResizerPosition,
+    setTopLeftResizerDelta,
+    setTopRightResizerDelta,
+    setBottomResizerDelta,
+    setPreviewWindowHeight,
     setScene
 } = editorSlice.actions;
 

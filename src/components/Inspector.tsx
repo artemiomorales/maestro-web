@@ -4,9 +4,9 @@ import { useSelector } from "react-redux";
 const Inspector = () => {
     const {
         resizerActive,
-        topLeftResizerPosition,
-        topRightResizerPosition,
-        bottomResizerPosition
+        topLeftResizerDelta,
+        topRightResizerDelta,
+        bottomResizerDelta
     } = useSelector( (state: any) => state.editor);
 
     const inspectorRef = useRef<HTMLDivElement>(null);
@@ -20,9 +20,9 @@ const Inspector = () => {
 
     useEffect(() => {
         if (inspectorRef.current && resizerActive === "topRight") {
-            inspectorRef.current.style.flexBasis = `${inspectorWidth - topRightResizerPosition}px`;
+            inspectorRef.current.style.flexBasis = `${inspectorWidth - topRightResizerDelta}px`;
         }
-    }, [topLeftResizerPosition, topRightResizerPosition, bottomResizerPosition]);
+    }, [topLeftResizerDelta, topRightResizerDelta, bottomResizerDelta]);
 
     return (
       <div className="inspector" ref={inspectorRef}>

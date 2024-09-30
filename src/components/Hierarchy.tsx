@@ -4,9 +4,9 @@ import { useSelector } from "react-redux";
 const Hierarchy = () => {
     const {
         resizerActive,
-        topLeftResizerPosition,
-        topRightResizerPosition,
-        bottomResizerPosition
+        topLeftResizerDelta,
+        topRightResizerDelta,
+        bottomResizerDelta
     } = useSelector( (state: any) => state.editor);
 
     const hierarchyRef = useRef<HTMLDivElement>(null);
@@ -20,9 +20,9 @@ const Hierarchy = () => {
 
     useEffect(() => {
         if (hierarchyRef.current && resizerActive === "topLeft") {
-            hierarchyRef.current.style.flexBasis = `${hierarchyWidth + topLeftResizerPosition}px`;
+            hierarchyRef.current.style.flexBasis = `${hierarchyWidth + topLeftResizerDelta}px`;
         }
-    }, [topLeftResizerPosition, topRightResizerPosition, bottomResizerPosition]);
+    }, [topLeftResizerDelta, topRightResizerDelta, bottomResizerDelta]);
 
     return (
       <div className="hierarchy" ref={hierarchyRef}>
