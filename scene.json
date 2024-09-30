@@ -1,0 +1,257 @@
+{
+    "scene": {
+        "width": 1920,
+        "height": 1080,
+        "duration": 10
+    },
+    "elements": [
+        {
+            "type": "img",
+            "path": "./media/Eyes1.png",
+            "clips": [
+                {
+                    "start": 0,
+                    "end": 0.5,
+                    "opacityStart": 0,
+                    "opacityEnd": 1
+                },
+                {
+                    "start": 0.5,
+                    "end": 1,
+                    "opacityStart": 1,
+                    "opacityEnd": 0
+                }
+            ]
+        },
+        {
+            "type": "img",
+            "path": "./media/Eyes2.png",
+            "clips": [
+                {
+                    "start": 0.5,
+                    "end": 1,
+                    "opacityStart": 0,
+                    "opacityEnd": 1
+                },
+                {
+                    "start": 1,
+                    "end": 1.5,
+                    "opacityStart": 1,
+                    "opacityEnd": 0
+                }
+            ]
+        },
+        {
+            "type": "img",
+            "path": "./media/Eyes3.png",
+            "clips": [
+                {
+                    "start": 1,
+                    "end": 1.5,
+                    "opacityStart": 0,
+                    "opacityEnd": 1
+                },
+                {
+                    "start": 1.5,
+                    "end": 2,
+                    "opacityStart": 1,
+                    "opacityEnd": 0
+                }
+            ]
+        },
+        {
+            "type": "img",
+            "path": "./media/Eyes4.png",
+            "clips": [
+                {
+                    "start": 1.5,
+                    "end": 2,
+                    "opacityStart": 0,
+                    "opacityEnd": 1
+                },
+                {
+                    "start": 2,
+                    "end": 2.5,
+                    "opacityStart": 1,
+                    "opacityEnd": 0
+                }
+            ]
+        },
+        {
+            "type": "img",
+            "path": "./media/Eyes5.png",
+            "clips": [
+                {
+                    "start": 2,
+                    "end": 2.5,
+                    "opacityStart": 0,
+                    "opacityEnd": 1
+                },
+                {
+                    "start": 2.5,
+                    "end": 3,
+                    "opacityStart": 1,
+                    "opacityEnd": 0
+                }
+            ]
+        },
+        {
+            "type": "img",
+            "path": "./media/Eyes6.png",
+            "clips": [
+                {
+                    "start": 2.5,
+                    "end": 3,
+                    "opacityStart": 0,
+                    "opacityEnd": 1
+                },
+                {
+                    "start": 3,
+                    "end": 3.5,
+                    "opacityStart": 1,
+                    "opacityEnd": 0
+                }
+            ]
+        },
+        {
+            "type": "img",
+            "path": "./media/Eyes7.png",
+            "clips": [
+                {
+                    "start": 3,
+                    "end": 3.5,
+                    "opacityStart": 0,
+                    "opacityEnd": 1
+                },
+                {
+                    "start": 3.5,
+                    "end": 4,
+                    "opacityStart": 1,
+                    "opacityEnd": 0
+                }
+            ]
+        },
+        {
+            "type": "img",
+            "path": "./media/Eyes8.png",
+            "clips": [
+                {
+                    "start": 3.5,
+                    "end": 4,
+                    "opacityStart": 0,
+                    "opacityEnd": 1
+                },
+                {
+                    "start": 4,
+                    "end": 4.5,
+                    "opacityStart": 1,
+                    "opacityEnd": 0
+                }
+            ]
+        },
+        {
+            "type": "img",
+            "path": "./media/Eyes9.png",
+            "clips": [
+                {
+                    "start": 4,
+                    "end": 4.5,
+                    "opacityStart": 0,
+                    "opacityEnd": 1
+                },
+                {
+                    "start": 4.5,
+                    "end": 5,
+                    "opacityStart": 1,
+                    "opacityEnd": 0
+                }
+            ]
+        },
+        {
+            "type": "img",
+            "path": "./media/Eyes10.png",
+            "clips": [
+                {
+                    "start": 4.5,
+                    "end": 5,
+                    "opacityStart": 0,
+                    "opacityEnd": 1
+                },
+                {
+                    "start": 5,
+                    "end": 5.5,
+                    "opacityStart": 1,
+                    "opacityEnd": 0
+                }
+            ]
+        },
+        {
+            "type": "img",
+            "path": "./media/Eyes11.png",
+            "clips": [
+                {
+                    "start": 5,
+                    "end": 5.5,
+                    "opacityStart": 0,
+                    "opacityEnd": 1
+                },
+                {
+                    "start": 5.5,
+                    "end": 6,
+                    "opacityStart": 1,
+                    "opacityEnd": 0
+                }
+            ]
+        },
+        {
+            "type": "img",
+            "path": "./media/Eyes12.png",
+            "clips": [
+                {
+                    "start": 5.5,
+                    "end": 6,
+                    "opacityStart": 0,
+                    "opacityEnd": 1
+                },
+                {
+                    "start": 6,
+                    "end": 6.5,
+                    "opacityStart": 1,
+                    "opacityEnd": 0
+                }
+            ]
+        },
+        {
+            "type": "img",
+            "path": "./media/Eyes13.png",
+            "clips": [
+                {
+                    "start": 6,
+                    "end": 6.5,
+                    "opacityStart": 0,
+                    "opacityEnd": 1
+                },
+                {
+                    "start": 6.5,
+                    "end": 7,
+                    "opacityStart": 1,
+                    "opacityEnd": 0
+                }
+            ]
+        },
+        {
+            "type": "audio",
+            "path": "./media/audio/04 - Music.mp3",
+            "autoplay": false,
+            "volumeStart": 1,
+            "clips": [
+                {
+                    "start": 6,
+                    "end": 6.5,
+                    "volumeStart": 1,
+                    "volumeEnd": 0
+                }
+            ]
+        }
+    ]
+}
