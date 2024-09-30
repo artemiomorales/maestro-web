@@ -21,7 +21,6 @@ const Stage = () => {
     }, [ resizerActive ]);
 
     useEffect(() => {
-        console.log("resetting");
         if (stageContainerRef.current) {
             if (resizerActive === "topLeft") {
                 stageContainerRef.current.style.flexBasis = `${stageWidth + (topLeftResizerPosition * -1 )}px`;

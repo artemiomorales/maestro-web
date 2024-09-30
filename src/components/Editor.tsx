@@ -13,19 +13,33 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 
 const Editor = () => {
+    const {
+        resizerActive,
+        topLeftResizerPosition,
+        topRightResizerPosition,
+        bottomResizerPosition
+    } = useSelector( (state: any) => state.editor);
+
     const dispatch = useDispatch();
     const store = useSelector( (state: any) => state.editor);
 
-    const widgetTopRef = useRef<HTMLDivElement>(null);
-    const widgetBottomRef = useRef<HTMLDivElement>(null);
+    const topWidgetRef = useRef<HTMLDivElement>(null);
+    const bottomWidgetRef = useRef<HTMLDivElement>(null);
     
     const [startYDrag, setStartYDrag] = useState<number>(0);
     const [startXDrag, setStartXDrag] = useState<number>(0);
 
-    let startWidgetTopHeight;
-    let startWidgetBottomHeight;
+    const [topWidgetHeight, setTopWidgetHeight] = useState<number>(0)
+    const [bottomWidgetHeight, setBottomWidgetHeight] = useState<number>(0)
 
-    console.log(store);
+    useEffect(() => {
+        if (topWidgetRef.current) {
+            setTopWidgetHeight(topWidgetRef.current.offsetHeight);
+        }
+        if (bottomWidgetRef.current) {
+            setBottomWidgetHeight(bottomWidgetRef.current.offsetHeight);
+        }
+    }, [ resizerActive ]);
 
     const handleMouseMove = (e: any) => {
         switch(store.resizerActive) {
@@ -43,6 +57,13 @@ const Editor = () => {
         }
     }
 
+    useEffect(() => {
+        if (topWidgetRef.current && bottomWidgetRef.current && resizerActive === "bottom") {
+            bottomWidgetRef.current.style.flexBasis = `${bottomWidgetHeight + bottomResizerPosition}px`;
+            topWidgetRef.current.style.flexBasis = `${topWidgetHeight - bottomResizerPosition}px`;
+        }
+    }, [topLeftResizerPosition, topRightResizerPosition, bottomResizerPosition]);
+
     const handleMouseUp = (e: any) => {
         dispatch(setResizerActive(null));
     }
@@ -58,7 +79,7 @@ const Editor = () => {
 
     return (
         <div className="editor">
-            <div className="widget-top" ref={widgetTopRef}>
+            <div className="widget-top" ref={topWidgetRef}>
                 <Hierarchy />
                 <div className="resizer resizer-ew top-left-resizer"
                     onMouseDown={ (e) => {
@@ -81,7 +102,7 @@ const Editor = () => {
                     setStartYDrag(e.clientY);
                 }}
             ></div>
-            <div className="widget-bottom" ref={widgetBottomRef}>
+            <div className="widget-bottom" ref={bottomWidgetRef}>
                 <Controls />
                 <Timeline />
             </div>
