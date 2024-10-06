@@ -8,7 +8,7 @@ function handleMessage(event) {
     console.log('Message received:', event);
     const eventData = event.data;
     if(eventData.type === 'RESIZE') {
-        handleResize(eventData.payload.previewWindowHeight);
+        debounce( handleResize(eventData.payload.previewWindowHeight) );
     }
 }
 
