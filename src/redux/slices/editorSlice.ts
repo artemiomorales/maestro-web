@@ -1,25 +1,32 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-interface Vector2 {
+export interface Vector2 {
     x: number;
     y: number;
 }
 
-interface Element {
+export interface Node {
     id: number;
     name: string;
     position: Vector2;
     scale: Vector2;
+    type: "text" | "img" | "video" | "audio";
 }
 
-interface EditorState {
+export interface EditorState {
     duration: number;
-    scene: object;
+    scene: {
+      elements: Node[];
+    }
+    selectedNode: Node | null;
 }
 
 const initialState: EditorState = {
     duration: 0,
-    scene: {},
+    scene: {
+      elements: []
+    },
+    selectedNode: null
 };
 
 const editorSlice = createSlice({
@@ -32,12 +39,16 @@ const editorSlice = createSlice({
     setScene: (state, action: PayloadAction<object>) => {
         state.scene = action.payload;
     },
+    setSelectedNode: (state, action: PayloadAction<Node>) => {
+        state.selectedNode = action.payload;
+    }
   },
 });
 
 export const { 
     setDuration,
-    setScene
+    setScene,
+    setSelectedNode
 } = editorSlice.actions;
 
 export default editorSlice.reducer;

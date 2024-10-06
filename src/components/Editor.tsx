@@ -60,7 +60,9 @@ const Editor = () => {
     useEffect(() => {
         if (topWidgetRef.current && bottomWidgetRef.current && resizerActive === "bottom") {
             bottomWidgetRef.current.style.flexBasis = `${bottomWidgetHeight + bottomResizerDelta}px`;
+            bottomWidgetRef.current.style.height = `${bottomWidgetHeight + bottomResizerDelta}px`;
             topWidgetRef.current.style.flexBasis = `${topWidgetHeight - bottomResizerDelta}px`;
+            topWidgetRef.current.style.height = `${topWidgetHeight - bottomResizerDelta}px`;
         }
     }, [topLeftResizerDelta, topRightResizerDelta, bottomResizerDelta, resizerActive, bottomWidgetHeight, topWidgetHeight]);
 

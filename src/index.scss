@@ -111,6 +111,7 @@ img {
 
 .widget-top > * {
     flex-basis: 33%;
+    flex-shrink: 1;
 }
 
 .widget-bottom {
@@ -162,7 +163,30 @@ input[type="range"] {
 }
 
 .hierarchy {
+    overflow-y: scroll;    
+
+    table {
+        width: 100%;
+        max-height: 100%;
+    }
+
+    tr.selected {
+        background: lightblue;
+    }
+
+    td {
+        padding: 5px;
+        border: 1px solid #ccc;
+        width: 100%;
+    }
+}
+
+.inspector {
     padding: 20px;
+
+    input {
+        width: 50px;
+    }
 }
 
 iframe {

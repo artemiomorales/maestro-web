@@ -6,8 +6,12 @@ const Inspector = () => {
         resizerActive,
         topLeftResizerDelta,
         topRightResizerDelta,
-        bottomResizerDelta
+        bottomResizerDelta,
     } = useSelector( (state: any) => state.window);
+
+    const {
+        selectedNode,
+    } = useSelector( (state: any) => state.editor);
 
     const inspectorRef = useRef<HTMLDivElement>(null);
     const [inspectorWidth, setInspectorWidth] = useState<number>(0)
@@ -26,7 +30,35 @@ const Inspector = () => {
 
     return (
       <div className="inspector" ref={inspectorRef}>
-        
+        { selectedNode &&
+            <div>
+                <p>{selectedNode.type}</p>
+                <table>
+                    <tr>
+                        <td>
+                            <strong>Transform</strong>
+                        </td>
+                        <td>X</td>
+                        <td>
+                            <input type="number"></input>
+                        </td>
+                        <td>Y</td>
+                        <td>
+                            <input type="number"></input>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong>Opacity</strong>
+                        </td>
+                        <td></td>
+                        <td>
+                            <input type="number"></input>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        }
       </div>
     );
 
