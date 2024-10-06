@@ -4,7 +4,7 @@
         "height": 1080,
         "duration": 10
     },
-    "elements": [
+    "nodes": [
         {
             "id": "557c73d4-02ea-47d7-9760-4824a45c8cb1",
             "type": "img",
@@ -264,6 +264,34 @@
                     "end": 6.5,
                     "volumeStart": 1,
                     "volumeEnd": 0
+                }
+            ]
+        }
+    ],
+    "timelines": [
+        {
+            "duration": 10,
+            "tracks": [
+                {
+                    "id": "",
+                    "target": "557c73d4-02ea-47d7-9760-4824a45c8cb1",
+                    "type": "opacity",
+                    "clips": [
+                        {
+                            "id": "fdaiofe1",
+                            "start": 0,
+                            "end": 0.5,
+                            "initialOpacity": 0,
+                            "targetOpacity": 1
+                        },
+                        {
+                            "id": "fdaiofe2",
+                            "start": 0.5,
+                            "end": 1,
+                            "initialOpacity": 1,
+                            "targetOpacity": 0
+                        }
+                    ]
                 }
             ]
         }

@@ -4,7 +4,7 @@ const stage = document.querySelector('.stage');
 
 
 
-let elements = [];
+let nodes = [];
 let currentTime = 0;
 let duration = 0;
 let progress = 0;
@@ -56,8 +56,8 @@ function handleLoadScene(remoteSceneData) {
     if (scene.scene){
         duration = scene.scene.duration;
     }
-    if (scene.elements) {
-        scene.elements.forEach(dataElement => {
+    if (scene.nodes) {
+        scene.nodes.forEach(dataElement => {
             const stageElement = document.createElement(dataElement.type);
 
             dataElement.clips.forEach(clip => {
@@ -75,7 +75,7 @@ function handleLoadScene(remoteSceneData) {
             }
 
             stage.appendChild(stageElement);
-            elements.push({
+            nodes.push({
                 ...dataElement,
                 stageElement,
             });
@@ -95,15 +95,15 @@ function modifySequence(delta) {
     }
     progress = Math.max(0, Math.min(currentTime / duration, 1));
 
-    elements.forEach(currentElement => {
-        currentElement.clips.forEach((clip, index) => {
-            processClip(currentElement, clip, currentTime, index);
+    nodes.forEach(currentNode => {
+        currentNode.clips.forEach((clip, index) => {
+            processClip(currentNode, clip, currentTime, index);
         });
     });
 }
 
 
-function processClip(currentElement, clip, time, index) {
+function processClip(currentNode, clip, time, index) {
     // console.log('Processing clip:', clip);
     // console.log('Time:', time);
     if (time > clip.start && time < clip.end) {
@@ -114,7 +114,7 @@ function processClip(currentElement, clip, time, index) {
         if (clip.startY && clip.endY && clip.startX && clip.endX) {
             const topDelta = clip.endY - clip.startY;
             const leftDelta = clip.endX - clip.startX;
-            currentElement.stageElement.style.transform =
+            currentNode.stageElement.style.transform =
                 `translate(
                     ${clip.startX + (leftDelta * clipProgress)}px,
                     ${clip.startY + (topDelta * clipProgress)}px
@@ -124,35 +124,35 @@ function processClip(currentElement, clip, time, index) {
         // Process opacity
         if (clip.opacityStart !== undefined && clip.opacityEnd !== undefined) {
             const opacityDelta = clip.opacityEnd - clip.opacityStart;
-            currentElement.stageElement.style.opacity = clip.opacityStart + (opacityDelta * clipProgress);
+            currentNode.stageElement.style.opacity = clip.opacityStart + (opacityDelta * clipProgress);
         }
 
         if (clip.volumeStart !== undefined && clip.volumeEnd !== undefined) {
-            if(currentElement.isPlaying === false) {
-                console.log(currentElement);
-                currentElement.stageElement.play();
-                currentElement.isPlaying = true;
+            if(currentNode.isPlaying === false) {
+                console.log(currentNode);
+                currentNode.stageElement.play();
+                currentNode.isPlaying = true;
             }
             const volumeDelta = clip.volumeEnd - clip.volumeStart;
-            currentElement.stageElement.volume = clip.volumeStart + (volumeDelta * clipProgress);
+            currentNode.stageElement.volume = clip.volumeStart + (volumeDelta * clipProgress);
         }
     }
     else if (time <= clip.start && index === 0) {
         if (clip.opacityStart !== undefined && clip.opacityEnd !== undefined) {
             // Reset opacity
-            currentElement.stageElement.style.opacity = clip.opacityStart;
+            currentNode.stageElement.style.opacity = clip.opacityStart;
         }
         if (clip.volumeStart !== undefined && clip.volumeEnd !== undefined) {
-            currentElement.stageElement.volume = clip.volumeStart;
+            currentNode.stageElement.volume = clip.volumeStart;
         }
     }
-    else if (time >= clip.end && index === currentElement.clips.length - 1) {
+    else if (time >= clip.end && index === currentNode.clips.length - 1) {
         if (clip.opacityStart !== undefined && clip.opacityEnd !== undefined) {
             // Reset opacity
-            currentElement.stageElement.style.opacity = clip.opacityEnd;
+            currentNode.stageElement.style.opacity = clip.opacityEnd;
         }
         if (clip.volumeStart !== undefined && clip.volumeEnd !== undefined) {
-            currentElement.stageElement.volume = clip.volumeEnd;
+            currentNode.stageElement.volume = clip.volumeEnd;
         }
     }
 }

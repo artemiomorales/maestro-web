@@ -5,42 +5,76 @@ export interface Vector2 {
     y: number;
 }
 
+export interface Scene {
+  nodes: Node[];
+  timelines: Timeline[];
+} 
+
 export interface Node {
     id: number;
     name: string;
     position: Vector2;
     scale: Vector2;
     type: "text" | "img" | "video" | "audio";
+    path: string;
+}
+
+export interface Clip {
+  id: string;
+  start: number;
+  end: number;
+  opacityStart?: number;
+  opacityEnd?: number;
+}
+
+export interface Track {
+  id: string;
+  type: string;
+  path: string;
+  clips: Clip[];
+}
+
+export interface Timeline {
+  tracks: Track[];
 }
 
 export interface EditorState {
     duration: number;
-    scene: {
-      elements: Node[];
-    }
-    selectedNode: Node | null;
+    scene: Scene;
+    selectedNodes: Node[];
+    selectedTracks: Track[];
+    selectedClips: Clip[];
 }
 
 const initialState: EditorState = {
     duration: 0,
     scene: {
-      elements: []
+      nodes: [],
+      timelines: []
     },
-    selectedNode: null
+    selectedNodes: [],
+    selectedTracks: [],
+    selectedClips: []
 };
 
 const editorSlice = createSlice({
-  name: 'window',
+  name: 'editor',
   initialState,
   reducers: {
     setDuration: (state, action: PayloadAction<number>) => {
       state.duration = action.payload;
     },
-    setScene: (state, action: PayloadAction<object>) => {
-        state.scene = action.payload;
+    setScene: (state, action: PayloadAction<Scene>) => {
+      state.scene = action.payload;
     },
-    setSelectedNode: (state, action: PayloadAction<Node>) => {
-        state.selectedNode = action.payload;
+    setSelectedNodes: (state, action: PayloadAction<Node[]>) => {
+      state.selectedNodes = action.payload;
+    },
+    setSelectedTracks: (state, action: PayloadAction<Track[]>) => {
+      state.selectedTracks = action.payload;
+    },
+    setSelectedClips: (state, action: PayloadAction<Clip[]>) => {
+      state.selectedClips = action.payload;
     }
   },
 });
@@ -48,7 +82,9 @@ const editorSlice = createSlice({
 export const { 
     setDuration,
     setScene,
-    setSelectedNode
+    setSelectedNodes,
+    setSelectedTracks,
+    setSelectedClips
 } = editorSlice.actions;
 
 export default editorSlice.reducer;

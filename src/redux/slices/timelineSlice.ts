@@ -7,37 +7,41 @@ interface Clip {
   opacityEnd?: number;
 }
 
-interface Element {
+interface Track {
   id: string;
   type: string;
   path: string;
   clips: Clip[];
 }
 
-interface TimelineState {
-  elements: Element[];
+interface Timeline {
+  tracks: Track[];
+  selectedTracks: Track[];
+  selectedClips: Clip[];
 }
 
-const initialState: TimelineState = {
-  elements: [],
+const initialState: Timeline = {
+  tracks: [],
+  selectedTracks: [],
+  selectedClips: [],
 };
 
 const timelineSlice = createSlice({
   name: 'timeline',
   initialState,
   reducers: {
-    setElements: (state, action: PayloadAction<Element[]>) => {
-      state.elements = action.payload;
-    },
-    updateElement: (state, action: PayloadAction<Element>) => {
-      const index = state.elements.findIndex(el => el.id === action.payload.id);
-      if (index !== -1) {
-        state.elements[index] = action.payload;
-      }
-    },
+    // setNodes: (state, action: PayloadAction<Element[]>) => {
+    //   state.nodes = action.payload;
+    // },
+    // updateElement: (state, action: PayloadAction<Element>) => {
+    //   const index = state.nodes.findIndex(el => el.id === action.payload.id);
+    //   if (index !== -1) {
+    //     state.nodes[index] = action.payload;
+    //   }
+    // },
   },
 });
 
-export const { setElements, updateElement } = timelineSlice.actions;
+export const { } = timelineSlice.actions;
 
 export default timelineSlice.reducer;

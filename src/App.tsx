@@ -7,8 +7,9 @@ import sceneData from '../scene.json';
 const App = () => {
   const dispatch = useDispatch();
 
+  console.log('sceneData', sceneData);
   useEffect(() => {
-    dispatch(setScene(sceneData));
+    dispatch( setScene( sceneData ) );
   }, [dispatch]);
 
   return (
