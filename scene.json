@@ -7,7 +7,7 @@
     "elements": [
         {
             "type": "img",
-            "path": "./media/Eyes1.png",
+            "path": "/media/Eyes1.png",
             "clips": [
                 {
                     "start": 0,
@@ -25,7 +25,7 @@
         },
         {
             "type": "img",
-            "path": "./media/Eyes2.png",
+            "path": "/media/Eyes2.png",
             "clips": [
                 {
                     "start": 0.5,
@@ -43,7 +43,7 @@
         },
         {
             "type": "img",
-            "path": "./media/Eyes3.png",
+            "path": "/media/Eyes3.png",
             "clips": [
                 {
                     "start": 1,
@@ -61,7 +61,7 @@
         },
         {
             "type": "img",
-            "path": "./media/Eyes4.png",
+            "path": "/media/Eyes4.png",
             "clips": [
                 {
                     "start": 1.5,
@@ -79,7 +79,7 @@
         },
         {
             "type": "img",
-            "path": "./media/Eyes5.png",
+            "path": "/media/Eyes5.png",
             "clips": [
                 {
                     "start": 2,
@@ -97,7 +97,7 @@
         },
         {
             "type": "img",
-            "path": "./media/Eyes6.png",
+            "path": "/media/Eyes6.png",
             "clips": [
                 {
                     "start": 2.5,
@@ -115,7 +115,7 @@
         },
         {
             "type": "img",
-            "path": "./media/Eyes7.png",
+            "path": "/media/Eyes7.png",
             "clips": [
                 {
                     "start": 3,
@@ -133,7 +133,7 @@
         },
         {
             "type": "img",
-            "path": "./media/Eyes8.png",
+            "path": "/media/Eyes8.png",
             "clips": [
                 {
                     "start": 3.5,
@@ -151,7 +151,7 @@
         },
         {
             "type": "img",
-            "path": "./media/Eyes9.png",
+            "path": "/media/Eyes9.png",
             "clips": [
                 {
                     "start": 4,
@@ -169,7 +169,7 @@
         },
         {
             "type": "img",
-            "path": "./media/Eyes10.png",
+            "path": "/media/Eyes10.png",
             "clips": [
                 {
                     "start": 4.5,
@@ -187,7 +187,7 @@
         },
         {
             "type": "img",
-            "path": "./media/Eyes11.png",
+            "path": "/media/Eyes11.png",
             "clips": [
                 {
                     "start": 5,
@@ -205,7 +205,7 @@
         },
         {
             "type": "img",
-            "path": "./media/Eyes12.png",
+            "path": "/media/Eyes12.png",
             "clips": [
                 {
                     "start": 5.5,
@@ -223,7 +223,7 @@
         },
         {
             "type": "img",
-            "path": "./media/Eyes13.png",
+            "path": "/media/Eyes13.png",
             "clips": [
                 {
                     "start": 6,
@@ -241,7 +241,7 @@
         },
         {
             "type": "audio",
-            "path": "./media/audio/04 - Music.mp3",
+            "path": "/media/audio/04 - Music.mp3",
             "autoplay": false,
             "volumeStart": 1,
             "clips": [

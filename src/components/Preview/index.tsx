@@ -20,10 +20,6 @@ const PreviewWindow = () => {
         }
     }, [ resizerActive ]);
 
-    // useEffect(() => {
-    //     document.addEventListener
-    // ), []);
-
     useEffect(() => {
         if (previewWindowRef.current) {
             if (resizerActive === "topLeft") {
@@ -48,15 +44,8 @@ const PreviewWindow = () => {
   );
 };
 
-const PreviewIframe = () => {
-    //   const { scene } = useSelector((state) => state.scene);
-    //   const elements = useSelector((state) => state.timeline.elements);
-
-    
+const PreviewIframe = () => {    
     const {
-        topLeftResizerDelta,
-        topRightResizerDelta,
-        bottomResizerDelta,
         previewWindowHeight,
         resizerActive,
     } = useSelector( (state: any) => state.window);
@@ -65,29 +54,37 @@ const PreviewIframe = () => {
         scene
     } = useSelector( (state: any) => state.editor);
 
-    console.log(scene);
-
     const iframeRef = useRef<HTMLIFrameElement>(null);
 
     useEffect(() => {
         const iframe = iframeRef.current;
         if ( !iframe ) return;
 
-        const resizeIframe = () => {
+        const resize = () => {
             const message = { type: 'RESIZE', payload: { previewWindowHeight: previewWindowHeight }  };
             iframe.contentWindow?.postMessage(message, '*');
         }
-        resizeIframe();
+        const loadScene = () => {
+            const message = { type: 'LOAD_SCENE', payload: { scene: scene }  };
+            iframe.contentWindow?.postMessage(message, '*');
+        }
+        const preparePlayer = () => {
+            resize();
+            loadScene();
+        }
+
+        // Resize whenever the window height changes
+        resize();
 
         // Add load event listener
-        iframe.addEventListener('load', resizeIframe);
+        iframe.addEventListener('load', preparePlayer);
 
         // Cleanup the event listener on component unmount
         return () => {
-            iframe.removeEventListener('load', resizeIframe);
+            iframe.removeEventListener('load', preparePlayer);
         };
 
-    }, [topLeftResizerDelta, topRightResizerDelta, bottomResizerDelta, previewWindowHeight]);
+    }, [ previewWindowHeight, scene ]);
 
     useEffect(() => {
         const iframe = iframeRef.current;
@@ -108,14 +105,6 @@ const PreviewIframe = () => {
                 title="Player"
                 ref={iframeRef}
             ></iframe>
-        {/* {elements.map((element) => (
-            <img
-            key={element.id}
-            src={element.path}
-            style={{ opacity: element.opacity }}
-            alt=""
-            />
-        ))} */}
         </div>
     )
 }
