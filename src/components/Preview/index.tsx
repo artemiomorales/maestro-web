@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setPreviewWindowHeight } from '../../redux/slices/windowSlice';
 
-const StageContainer = () => {
+const PreviewWindow = () => {
     const {
         resizerActive,
         topLeftResizerDelta,
@@ -10,68 +10,104 @@ const StageContainer = () => {
         bottomResizerDelta
     } = useSelector( (state: any) => state.window);
     
-    const stageContainerRef = useRef<HTMLDivElement>(null);
+    const previewWindowRef = useRef<HTMLDivElement>(null);
     const [stageWidth, setStageWidth] = useState<number>(0)
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if (stageContainerRef.current) {
-            setStageWidth(stageContainerRef.current.offsetWidth);
+        if (previewWindowRef.current) {
+            setStageWidth(previewWindowRef.current.offsetWidth);
         }
     }, [ resizerActive ]);
 
+    // useEffect(() => {
+    //     document.addEventListener
+    // ), []);
+
     useEffect(() => {
-        if (stageContainerRef.current) {
+        if (previewWindowRef.current) {
             if (resizerActive === "topLeft") {
-                stageContainerRef.current.style.flexBasis = `${stageWidth + (topLeftResizerDelta * -1 )}px`;
+                previewWindowRef.current.style.flexBasis = `${stageWidth + (topLeftResizerDelta * -1 )}px`;
             }
             if (resizerActive === "topRight") {
-                stageContainerRef.current.style.flexBasis = `${stageWidth + topRightResizerDelta}px`;
+                previewWindowRef.current.style.flexBasis = `${stageWidth + topRightResizerDelta}px`;
             }
         }
     }, [topLeftResizerDelta, topRightResizerDelta]);
 
     useEffect(() => {
-        if (stageContainerRef.current) {
-            dispatch(setPreviewWindowHeight(stageContainerRef.current.offsetHeight));
+        if (previewWindowRef.current) {
+            dispatch(setPreviewWindowHeight(previewWindowRef.current.offsetHeight));
         }
     }, [bottomResizerDelta])
 
   return (
-    <div className="stage-container" ref={stageContainerRef}>
-       <Stage />
+    <div className="preview-window" ref={previewWindowRef}>
+       <PreviewIframe />
     </div>
   );
 };
 
-const Stage = () => {
+const PreviewIframe = () => {
     //   const { scene } = useSelector((state) => state.scene);
     //   const elements = useSelector((state) => state.timeline.elements);
 
+    
     const {
-        scene,
-        resizerActive,
         topLeftResizerDelta,
         topRightResizerDelta,
         bottomResizerDelta,
         previewWindowHeight,
+        resizerActive,
     } = useSelector( (state: any) => state.window);
 
-    const stageRef = useRef<HTMLDivElement>(null);
+    const {
+        scene
+    } = useSelector( (state: any) => state.editor);
+
+    console.log(scene);
+
+    const iframeRef = useRef<HTMLIFrameElement>(null);
 
     useEffect(() => {
-        if(stageRef.current) {
-            const h = previewWindowHeight - 25;
-            const w = h * 9 / 16;
-            // set stage width and height
-            stageRef.current.style.width = w + 'px';
-            stageRef.current.style.height = h + 'px';
-            stageRef.current.style.top = (previewWindowHeight - h) / 2 + 'px';
+        const iframe = iframeRef.current;
+        if ( !iframe ) return;
+
+        const resizeIframe = () => {
+            const message = { type: 'RESIZE', payload: { previewWindowHeight: previewWindowHeight }  };
+            iframe.contentWindow?.postMessage(message, '*');
         }
+        resizeIframe();
+
+        // Add load event listener
+        iframe.addEventListener('load', resizeIframe);
+
+        // Cleanup the event listener on component unmount
+        return () => {
+            iframe.removeEventListener('load', resizeIframe);
+        };
+
     }, [topLeftResizerDelta, topRightResizerDelta, bottomResizerDelta, previewWindowHeight]);
 
+    useEffect(() => {
+        const iframe = iframeRef.current;
+        if ( !iframe ) return;
+
+        if( resizerActive ) {
+            iframe.style.pointerEvents = 'none';
+        } else {
+            iframe.style.pointerEvents = 'auto';
+        }
+
+    }, [resizerActive]);
+
     return (
-        <div className="stage" ref={stageRef}>
+        <div className="preview-iframe">
+            <iframe
+                src="/player/index.html"
+                title="Player"
+                ref={iframeRef}
+            ></iframe>
         {/* {elements.map((element) => (
             <img
             key={element.id}
@@ -84,4 +120,4 @@ const Stage = () => {
     )
 }
 
-export default StageContainer;
+export default PreviewWindow;

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import Editor from './components/Editor';
-import { setScene } from './redux/slices/windowSlice';
+import { setScene } from './redux/slices/editorSlice';
 import sceneData from '../scene.json';
 
 const App = () => {

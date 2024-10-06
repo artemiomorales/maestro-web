@@ -1,10 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-interface EditorState {
-    currentTime: number;
-    duration: number;
-    isPlaying: boolean;
-    scene: object;
+interface WindowState {
     topLeftResizerDelta: number;
     topRightResizerDelta: number;
     bottomResizerDelta: number;
@@ -12,11 +8,7 @@ interface EditorState {
     resizerActive: "topLeft" | "topRight" | "bottom" | null;
 }
 
-const initialState: EditorState = {
-    currentTime: 0,
-    duration: 0,
-    isPlaying: false,
-    scene: {},
+const initialState: WindowState = {
     topLeftResizerDelta: 0,
     topRightResizerDelta: 0,
     bottomResizerDelta: 0,
@@ -28,18 +20,6 @@ const windowSlice = createSlice({
   name: 'window',
   initialState,
   reducers: {
-    setCurrentTime: (state, action: PayloadAction<number>) => {
-      state.currentTime = action.payload;
-    },
-    setDuration: (state, action: PayloadAction<number>) => {
-      state.duration = action.payload;
-    },
-    play: (state) => {
-      state.isPlaying = true;
-    },
-    pause: (state) => {
-      state.isPlaying = false;
-    },
     setResizerActive: (state, action: PayloadAction<"topLeft" | "topRight" | "bottom" | null>) => {
         state.resizerActive = action.payload;
     },
@@ -55,23 +35,15 @@ const windowSlice = createSlice({
     setPreviewWindowHeight: (state, action: PayloadAction<number>) => {
         state.previewWindowHeight = action.payload;
     },
-    setScene: (state, action: PayloadAction<object>) => {
-        state.scene = action.payload;
-    },
   },
 });
 
 export const { 
-    setCurrentTime,
-    setDuration,
-    play,
-    pause,
     setResizerActive,
     setTopLeftResizerDelta,
     setTopRightResizerDelta,
     setBottomResizerDelta,
     setPreviewWindowHeight,
-    setScene
 } = windowSlice.actions;
 
 export default windowSlice.reducer;
