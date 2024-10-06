@@ -22,7 +22,7 @@ const Hierarchy = () => {
         if (hierarchyRef.current && resizerActive === "topLeft") {
             hierarchyRef.current.style.flexBasis = `${hierarchyWidth + topLeftResizerDelta}px`;
         }
-    }, [topLeftResizerDelta, topRightResizerDelta, bottomResizerDelta]);
+    }, [topLeftResizerDelta, topRightResizerDelta, bottomResizerDelta, resizerActive, hierarchyWidth]);
 
     return (
       <div className="hierarchy" ref={hierarchyRef}>

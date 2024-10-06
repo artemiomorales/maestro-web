@@ -62,7 +62,7 @@ const Editor = () => {
             bottomWidgetRef.current.style.flexBasis = `${bottomWidgetHeight + bottomResizerDelta}px`;
             topWidgetRef.current.style.flexBasis = `${topWidgetHeight - bottomResizerDelta}px`;
         }
-    }, [topLeftResizerDelta, topRightResizerDelta, bottomResizerDelta]);
+    }, [topLeftResizerDelta, topRightResizerDelta, bottomResizerDelta, resizerActive, bottomWidgetHeight, topWidgetHeight]);
 
     const handleMouseUp = (e: any) => {
         dispatch(setResizerActive(null));

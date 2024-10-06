@@ -22,7 +22,7 @@ const Inspector = () => {
         if (inspectorRef.current && resizerActive === "topRight") {
             inspectorRef.current.style.flexBasis = `${inspectorWidth - topRightResizerDelta}px`;
         }
-    }, [topLeftResizerDelta, topRightResizerDelta, bottomResizerDelta]);
+    }, [topLeftResizerDelta, topRightResizerDelta, bottomResizerDelta, resizerActive, inspectorWidth]);
 
     return (
       <div className="inspector" ref={inspectorRef}>

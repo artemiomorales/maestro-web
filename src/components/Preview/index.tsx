@@ -33,13 +33,13 @@ const PreviewWindow = () => {
                 previewWindowRef.current.style.flexBasis = `${stageWidth + topRightResizerDelta}px`;
             }
         }
-    }, [topLeftResizerDelta, topRightResizerDelta]);
+    }, [resizerActive, stageWidth, topLeftResizerDelta, topRightResizerDelta]);
 
     useEffect(() => {
         if (previewWindowRef.current) {
             dispatch(setPreviewWindowHeight(previewWindowRef.current.offsetHeight));
         }
-    }, [bottomResizerDelta])
+    }, [bottomResizerDelta, dispatch])
 
   return (
     <div className="preview-window" ref={previewWindowRef}>
