@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setPreviewWindowHeight } from '../../redux/slices/windowSlice';
+import { setCurrentTime } from '../../redux/slices/editorSlice';
 
 const PreviewWindow = () => {
     const {
@@ -44,14 +45,16 @@ const PreviewWindow = () => {
   );
 };
 
-const PreviewIframe = () => {    
+const PreviewIframe = () => {
+    const dispatch = useDispatch();
     const {
         previewWindowHeight,
         resizerActive,
     } = useSelector( (state: any) => state.window);
 
     const {
-        scene
+        scene,
+        currentTime,
     } = useSelector( (state: any) => state.editor);
 
     const iframeRef = useRef<HTMLIFrameElement>(null);
@@ -73,18 +76,39 @@ const PreviewIframe = () => {
             loadScene();
         }
 
+        const handleModifySequence = (e: any) => {
+            const data = e.data;
+
+            // Do something with the message
+            if (data.type === 'MODIFY_SEQUENCE' && data.payload.currentTime ) {
+                console.log('MODIFY_SEQUENCE', data.payload.currentTime);
+                dispatch( setCurrentTime(data.payload.currentTime) );
+            }
+        }
+
         // Resize whenever the window height changes
         resize();
 
         // Add load event listener
         iframe.addEventListener('load', preparePlayer);
+        window.addEventListener('message', handleModifySequence);
 
         // Cleanup the event listener on component unmount
         return () => {
             iframe.removeEventListener('load', preparePlayer);
+            window.removeEventListener('message', handleModifySequence);
         };
 
-    }, [ previewWindowHeight, scene ]);
+    }, [dispatch, previewWindowHeight, scene]);
+
+    useEffect(() => {
+        const iframe = iframeRef.current;
+        if ( !iframe ) return;
+
+        const message = { type: 'SET_ELAPSED_TIME', payload: { currentTime }  };
+        iframe.contentWindow?.postMessage(message, '*');
+
+    }, [ currentTime ]);
 
     useEffect(() => {
         const iframe = iframeRef.current;

@@ -1,29 +1,45 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Clip, setSelectedTracks } from "../redux/slices/editorSlice";
-import { Track } from "../redux/slices/editorSlice";
-import { useCallback, useEffect, useState } from "react";
+import { Track, setCurrentTime } from "../redux/slices/editorSlice";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 const Timeline = () => {
   const dispatch = useDispatch();
   const [ hashes, setHashes ] = useState<object[]>([]);
-  const clipWindowRef = useCallback( node => {
-    if(node !== null) {
-      console.log(node.getBoundingClientRect());
-      const pixelOffset = node.getBoundingClientRect().width / 10;
+  const [ scale, setScale ] = useState<number>(3000);
+  const clipWindowRef = useRef<HTMLTableCellElement>(null);
+
+  const {
+    scene,
+    currentTime,
+    selectedNodes,
+    selectedTracks,
+    selectedClips,
+} = useSelector( (state: any) => state.editor);
+
+  useEffect(() => {
+    if (clipWindowRef.current) {
+      const clipWindow = clipWindowRef.current;
+      console.log(clipWindow.getBoundingClientRect());
+      const pixelOffset = clipWindow.getBoundingClientRect().width / 10;
       const newHashes = [];
       for (let i = 1; i < 10; i++) {
         newHashes.push({ left: i * pixelOffset });
       }
       setHashes(newHashes);
-    }
-  }, []);
 
-  const {
-    scene,
-    selectedNodes,
-    selectedTracks,
-    selectedClips,
-} = useSelector( (state: any) => state.editor);
+      const callSetScale = (e: any) => {
+        console.log("e.deltaY", e.deltaY);
+        setScale(scale + e.deltaY);
+      };
+
+      clipWindow.addEventListener('wheel', callSetScale);
+  
+      return () => {
+        clipWindow.removeEventListener('wheel', callSetScale);
+      }
+    }
+  }, [scale]);
 
   let tracks: Track[] = [];
 
@@ -34,6 +50,8 @@ const Timeline = () => {
     }
   }, [ scene.timelines ] );
 
+  console.log("currentTime", currentTime);
+
   return (
       <div className="timeline">
         <table>
@@ -42,8 +60,12 @@ const Timeline = () => {
               <td>
                 <strong>Timeline</strong>
               </td>
-              <td className="clip-window" ref={clipWindowRef}>
-                <input className="scrubber" type="range" min="0" max="3000" step="1" />
+              <td className="clip-window" ref={clipWindowRef} style={{ width: `${scale}px` }}>
+                <input className="scrubber" type="range" min="0" max={10} step="0.01" value={currentTime} onChange={
+                  (e) => {
+                    dispatch(setCurrentTime(parseFloat(e.target.value)));
+                  }
+                }/>
                 { hashes.map((hash: any, index: number) => {
                   return (
                     <div key={index} className="hash" style={ { left : hash.left }}>
@@ -61,7 +83,7 @@ const Timeline = () => {
                     }}>
                         <span>{track.type}</span>
                     </td>
-                    <td className="clip-container">
+                    <td className="clip-container" style={{ width: `${scale}px` }}>
                       { track.clips.map((clip: Clip) => {
                         return (
                           <div key={clip.id} className={ selectedClips[0]?.id === clip.id ? 'selected clip' : 'clip' } style={ { left : clip.start }} >

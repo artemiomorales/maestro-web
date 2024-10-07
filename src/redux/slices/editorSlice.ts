@@ -40,6 +40,7 @@ export interface Timeline {
 
 export interface EditorState {
     duration: number;
+    currentTime: number;
     scene: Scene;
     selectedNodes: Node[];
     selectedTracks: Track[];
@@ -48,6 +49,7 @@ export interface EditorState {
 
 const initialState: EditorState = {
     duration: 0,
+    currentTime: 0,
     scene: {
       nodes: [],
       timelines: []
@@ -63,6 +65,9 @@ const editorSlice = createSlice({
   reducers: {
     setDuration: (state, action: PayloadAction<number>) => {
       state.duration = action.payload;
+    },
+    setCurrentTime: (state, action: PayloadAction<number>) => {
+      state.currentTime = action.payload;
     },
     setScene: (state, action: PayloadAction<Scene>) => {
       state.scene = action.payload;
@@ -81,6 +86,7 @@ const editorSlice = createSlice({
 
 export const { 
     setDuration,
+    setCurrentTime,
     setScene,
     setSelectedNodes,
     setSelectedTracks,

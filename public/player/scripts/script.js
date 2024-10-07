@@ -2,8 +2,6 @@ import { debounce, deepClone } from './utils.js';
 console.log('Script loaded');
 const stage = document.querySelector('.stage');
 
-
-
 let nodes = [];
 let currentTime = 0;
 let duration = 0;
@@ -15,28 +13,27 @@ let scrollDelta = 0;
 let touchStartTime = 0;
 let lastScrollY = window.scrollY;
 
-
 window.addEventListener('message', handleMessage);
 
 // override scroll event on stage
 window.addEventListener('scroll', function (event) {
     touchStartTime = performance.now(); // Get the current time
     const currentScrollY = window.scrollY; // Get the current scroll position
-    console.log('Scrolling:', currentScrollY);
     scrollDelta = currentScrollY - lastScrollY; // Change in scroll position
-    console.log('Scroll delta:', scrollDelta);
     modifySequence(scrollDelta / 100); // Process the frame
     lastScrollY = currentScrollY; // Update the last scroll position
 });
 
 function handleMessage(event) {
-    console.log('Message received:', event);
     const eventData = event.data;
     if(eventData.type === 'RESIZE') {
         debounce( handleResize(eventData.payload.previewWindowHeight) );
     }
     if(eventData.type === 'LOAD_SCENE') {
         debounce( handleLoadScene(eventData.payload.scene) );
+    }
+    if(eventData.type === 'SET_ELAPSED_TIME') {
+        debounce( setSequenceTime(eventData.payload.currentTime) );
     }
 }
 
@@ -84,24 +81,32 @@ function handleLoadScene(remoteSceneData) {
 }
 
 function modifySequence(delta) {
-    currentTime += delta;
-    if(currentTime < 0) {
-        currentTime = 0;
-    } else if (currentTime > duration) {
-        currentTime = duration;
+    let newTime = currentTime + delta;
+    if(newTime < 0) {
+        newTime = 0;
+    } else if (newTime > duration) {
+        newTime = duration;
         if (animationFrameId) {
             cancelAnimationFrame(animationFrameId); // Prevent overlapping animations
         }
     }
-    progress = Math.max(0, Math.min(currentTime / duration, 1));
+    progress = Math.max(0, Math.min(newTime / duration, 1));
 
+    setSequenceTime(newTime);
+
+    const message = { type: 'MODIFY_SEQUENCE', payload: { currentTime: newTime } };
+    // Send the message to the parent window
+    window.parent.postMessage(message, '*'); // Replace with the actual domain of the parent
+}
+
+function setSequenceTime(targetTime) {
+    currentTime = targetTime;
     nodes.forEach(currentNode => {
         currentNode.clips.forEach((clip, index) => {
-            processClip(currentNode, clip, currentTime, index);
+            processClip(currentNode, clip, targetTime, index);
         });
     });
 }
-
 
 function processClip(currentNode, clip, time, index) {
     // console.log('Processing clip:', clip);
