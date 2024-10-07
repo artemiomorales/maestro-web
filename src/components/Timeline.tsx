@@ -21,10 +21,11 @@ const Timeline = () => {
     if (clipWindowRef.current) {
       const clipWindow = clipWindowRef.current;
       console.log(clipWindow.getBoundingClientRect());
-      const pixelOffset = clipWindow.getBoundingClientRect().width / 10;
+      const hashCount = 10 / 0.25;
+      const pixelOffset = scale / 10;
       const newHashes = [];
-      for (let i = 1; i < 10; i++) {
-        newHashes.push({ left: i * pixelOffset });
+      for (let i = 0.25; i < 10; i += 0.25) {
+        newHashes.push({ left: scale * (i / 10 ) + 75 });
       }
       setHashes(newHashes);
 
@@ -52,50 +53,54 @@ const Timeline = () => {
 
   console.log("currentTime", currentTime);
 
+  const getClipDimensions = (clip: Clip) => {
+    const leftPosition = scale * (clip.start / 10 );
+    const rightPosition = scale * (clip.end / 10 );
+    const width = rightPosition - leftPosition;
+
+    return {
+      left: `${leftPosition}px`,
+      width: `${width}px`
+    }
+  }
+
   return (
       <div className="timeline">
-        <table>
-          <tbody>
-            <tr>
-              <td>
-                <strong>Timeline</strong>
-              </td>
-              <td className="clip-window" ref={clipWindowRef} style={{ width: `${scale}px` }}>
-                <input className="scrubber" type="range" min="0" max={10} step="0.01" value={currentTime} onChange={
-                  (e) => {
-                    dispatch(setCurrentTime(parseFloat(e.target.value)));
-                  }
-                }/>
-                { hashes.map((hash: any, index: number) => {
-                  return (
-                    <div key={index} className="hash" style={ { left : hash.left }}>
-                    </div>
-                  )
-                })}
-              </td>
-            </tr>
-            { scene && scene.timelines[0] && scene.timelines[0].tracks.length > 0 && scene.timelines[0].tracks.map((track: Track) => {
-                return (
-                  <tr key={track.id}>
-                    <td className={ selectedTracks[0]?.id === track.id ? 'selected track' : 'track' } onClick={(e) => {
-                        e.stopPropagation();
-                        dispatch(setSelectedTracks([track]));
-                    }}>
-                        <span>{track.type}</span>
-                    </td>
-                    <td className="clip-container" style={{ width: `${scale}px` }}>
-                      { track.clips.map((clip: Clip) => {
-                        return (
-                          <div key={clip.id} className={ selectedClips[0]?.id === clip.id ? 'selected clip' : 'clip' } style={ { left : clip.start }} >
-                          </div>
-                        )
-                      })}
-                    </td>
-                  </tr>
-                )
+        <div className="timeline-header">
+          <div className="clip-window" ref={clipWindowRef} style={{ width: `${scale}px` }}>
+            <input className="scrubber" type="range" min="0" max={10} step="0.01" value={currentTime} onChange={
+              (e) => {
+                dispatch(setCurrentTime(parseFloat(e.target.value)));
+              }
+            }/>
+            { hashes.map((hash: any, index: number) => {
+              return (
+                <div key={index} className="hash" style={ { left : hash.left }}>
+                </div>
+              )
             })}
-          </tbody>
-        </table>
+          </div>
+        </div>
+        { scene && scene.timelines[0] && scene.timelines[0].tracks.length > 0 && scene.timelines[0].tracks.map((track: Track) => {
+            return (
+              <div key={track.id} className="track">
+                <div className={ selectedTracks[0]?.id === track.id ? 'selected track-label' : 'track-label' } onClick={(e) => {
+                    e.stopPropagation();
+                    dispatch(setSelectedTracks([track]));
+                }}>
+                    <span>{track.type}</span>
+                </div>
+                <div className="clip-container" style={{ width: `${scale}px` }}>
+                  { track.clips.map((clip: Clip) => {
+                    return (
+                      <div key={clip.id} className={ selectedClips[0]?.id === clip.id ? 'selected clip' : 'clip' } style={ getClipDimensions(clip) } >
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+            )
+        })}
       </div>
     );
   };

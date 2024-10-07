@@ -38,27 +38,36 @@ body {
     height: 100%;
     padding: 10px 20px;
     z-index: 9999;
-    overflow: auto;
+    overflow: scroll;
 
-    table {
-        width: 100%;
+    .timeline-header,
+    .track {
+        white-space: nowrap;
 
-        tr {
-            display: flex;
+        > * {
+            display: inline-block;
+        }
+    }
 
-            .clip-window {
-                position: relative;
-                width: 3000px;
-            }
+    .track {
+        height: 25px;
+    }
 
-            .clip-container {
-                position: relative;
-                
-                .clip {
-                    background: gray;
-                    position: absolute;
-                }
-            }
+    .clip-window {
+        position: relative;
+        width: 3000px;
+        padding-left: 75px;
+    }
+
+    .clip-container {
+        position: relative;
+        height: 100%;
+        
+        .clip {
+            border: 1px solid #000;
+            background: gray;
+            position: absolute;
+            height: 100%;
         }
     }
 
@@ -71,11 +80,10 @@ body {
         background: #000;
     }
 
-    .track {
+    .track-label {
         position: relative;
+        width: 75px;
     }
-
-
 }
 
 .play {  

@@ -292,6 +292,234 @@
                             "targetOpacity": 0
                         }
                     ]
+                },
+                {
+                    "id": "",
+                    "target": "558cff9d-7d18-4267-8ac6-90c22ad8d102",
+                    "type": "opacity",
+                    "clips": [
+                        {
+                            "start": 0.5,
+                            "end": 1,
+                            "opacityStart": 0,
+                            "opacityEnd": 1
+                        },
+                        {
+                            "start": 1,
+                            "end": 1.5,
+                            "opacityStart": 1,
+                            "opacityEnd": 0
+                        }
+                    ]
+                },
+                {
+                    "id": "",
+                    "target": "ecb463cf-52a4-4aaa-bc10-6aa6d05dea9a",
+                    "type": "opacity",
+                    "clips": [
+                        {
+                            "start": 1,
+                            "end": 1.5,
+                            "opacityStart": 0,
+                            "opacityEnd": 1
+                        },
+                        {
+                            "start": 1.5,
+                            "end": 2,
+                            "opacityStart": 1,
+                            "opacityEnd": 0
+                        }
+                    ]
+                },
+                {
+                    "id": "",
+                    "target": "f42fd6d4-fff6-4097-98e0-488f1812c00d",
+                    "type": "opacity",
+                    "clips": [
+                        {
+                            "start": 1.5,
+                            "end": 2,
+                            "opacityStart": 0,
+                            "opacityEnd": 1
+                        },
+                        {
+                            "start": 2,
+                            "end": 2.5,
+                            "opacityStart": 1,
+                            "opacityEnd": 0
+                        }
+                    ]
+                },
+                {
+                    "id": "",
+                    "target": "f42fd6d4-fff6-4097-98e0-488f1812c00d",
+                    "type": "opacity",
+                   "clips": [
+                        {
+                            "start": 2,
+                            "end": 2.5,
+                            "opacityStart": 0,
+                            "opacityEnd": 1
+                        },
+                        {
+                            "start": 2.5,
+                            "end": 3,
+                            "opacityStart": 1,
+                            "opacityEnd": 0
+                        }
+                    ]
+                },
+                {
+                    "id": "",
+                    "target": "f42fd6d4-fff6-4097-98e0-488f1812c00d",
+                    "type": "opacity",
+                    "clips": [
+                        {
+                            "start": 2.5,
+                            "end": 3,
+                            "opacityStart": 0,
+                            "opacityEnd": 1
+                        },
+                        {
+                            "start": 3,
+                            "end": 3.5,
+                            "opacityStart": 1,
+                            "opacityEnd": 0
+                        }
+                    ]
+                },
+                {
+                    "id": "",
+                    "target": "f42fd6d4-fff6-4097-98e0-488f1812c00d",
+                    "type": "opacity",
+                    "clips": [
+                        {
+                            "start": 3,
+                            "end": 3.5,
+                            "opacityStart": 0,
+                            "opacityEnd": 1
+                        },
+                        {
+                            "start": 3.5,
+                            "end": 4,
+                            "opacityStart": 1,
+                            "opacityEnd": 0
+                        }
+                    ]
+                },
+                {
+                    "id": "",
+                    "target": "f42fd6d4-fff6-4097-98e0-488f1812c00d",
+                    "type": "opacity",
+                    "clips": [
+                        {
+                            "start": 3.5,
+                            "end": 4,
+                            "opacityStart": 0,
+                            "opacityEnd": 1
+                        },
+                        {
+                            "start": 4,
+                            "end": 4.5,
+                            "opacityStart": 1,
+                            "opacityEnd": 0
+                        }
+                    ]
+                },
+                {
+                    "id": "",
+                    "target": "f42fd6d4-fff6-4097-98e0-488f1812c00d",
+                    "type": "opacity",
+                    "clips": [
+                        {
+                            "start": 4,
+                            "end": 4.5,
+                            "opacityStart": 0,
+                            "opacityEnd": 1
+                        },
+                        {
+                            "start": 4.5,
+                            "end": 5,
+                            "opacityStart": 1,
+                            "opacityEnd": 0
+                        }
+                    ]
+                },
+                {
+                    "id": "",
+                    "target": "f42fd6d4-fff6-4097-98e0-488f1812c00d",
+                    "type": "opacity",
+                    "clips": [
+                        {
+                            "start": 4.5,
+                            "end": 5,
+                            "opacityStart": 0,
+                            "opacityEnd": 1
+                        },
+                        {
+                            "start": 5,
+                            "end": 5.5,
+                            "opacityStart": 1,
+                            "opacityEnd": 0
+                        }
+                    ]
+                },
+                {
+                    "id": "",
+                    "target": "f42fd6d4-fff6-4097-98e0-488f1812c00d",
+                    "type": "opacity",
+                    "clips": [
+                        {
+                            "start": 5,
+                            "end": 5.5,
+                            "opacityStart": 0,
+                            "opacityEnd": 1
+                        },
+                        {
+                            "start": 5.5,
+                            "end": 6,
+                            "opacityStart": 1,
+                            "opacityEnd": 0
+                        }
+                    ]
+                },
+                {
+                    "id": "",
+                    "target": "f42fd6d4-fff6-4097-98e0-488f1812c00d",
+                    "type": "opacity",
+                    "clips": [
+                        {
+                            "start": 5.5,
+                            "end": 6,
+                            "opacityStart": 0,
+                            "opacityEnd": 1
+                        },
+                        {
+                            "start": 6,
+                            "end": 6.5,
+                            "opacityStart": 1,
+                            "opacityEnd": 0
+                        }
+                    ]
+                },
+                {
+                    "id": "",
+                    "target": "f42fd6d4-fff6-4097-98e0-488f1812c00d",
+                    "type": "opacity",
+                    "clips": [
+                        {
+                            "start": 6,
+                            "end": 6.5,
+                            "opacityStart": 0,
+                            "opacityEnd": 1
+                        },
+                        {
+                            "start": 6.5,
+                            "end": 7,
+                            "opacityStart": 1,
+                            "opacityEnd": 0
+                        }
+                    ]
                 }
             ]
         }
