@@ -2,11 +2,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { Clip, setSelectedTracks } from "../redux/slices/editorSlice";
 import { Track, setCurrentTime } from "../redux/slices/editorSlice";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { current } from "@reduxjs/toolkit";
 
 const Timeline = () => {
   const dispatch = useDispatch();
   const [ hashes, setHashes ] = useState<object[]>([]);
+  const [ dragging, setDragging ] = useState<boolean>(false);
+  const [ scrubberValue, setScrubberValue ] = useState<number>(0);
   const [ scale, setScale ] = useState<number>(3000);
+  const [ interval, setInterval ] = useState<number>(30);
   const clipWindowRef = useRef<HTMLTableCellElement>(null);
 
   const {
@@ -17,41 +21,57 @@ const Timeline = () => {
     selectedClips,
 } = useSelector( (state: any) => state.editor);
 
+const approximatelyEqual = (v1: number, v2: number, epsilon = 0.001) =>
+  Math.abs(v1 - v2) < epsilon;
+
   useEffect(() => {
     if (clipWindowRef.current) {
       const clipWindow = clipWindowRef.current;
-      console.log(clipWindow.getBoundingClientRect());
-      const hashCount = 10 / 0.25;
-      const pixelOffset = scale / 10;
       const newHashes = [];
-      for (let i = 0.25; i < 10; i += 0.25) {
-        newHashes.push({ left: scale * (i / 10 ) + 75 });
+      setInterval(scale / 100);
+      for (let i = interval; i < scale || approximatelyEqual(i, scale) ; i += interval) {
+        newHashes.push({ left: i + 'px' });
       }
       setHashes(newHashes);
 
       const callSetScale = (e: any) => {
-        console.log("e.deltaY", e.deltaY);
-        setScale(scale + e.deltaY);
+        if( e.target.className.includes('clip-window') ||
+            e.target.className.includes('clip-container') ||
+            e.target.className.includes('clip') ||
+            e.target.className.includes('track') ||
+            e.target.className.includes('scrubber')) {
+          e.preventDefault();
+          setScale(scale + Math.round((e.deltaY + Number.EPSILON) * 100) / 100);
+        }
       };
 
-      clipWindow.addEventListener('wheel', callSetScale);
+      const setDraggingFalse = () => {
+        console.log('dragging end');
+        setDragging(false);
+      }
+
+      window.addEventListener('wheel', callSetScale, { passive: false });
+      window.addEventListener('mouseup', setDraggingFalse);
   
       return () => {
-        clipWindow.removeEventListener('wheel', callSetScale);
+        window.removeEventListener('wheel', callSetScale);
+        window.removeEventListener('mouseup', setDraggingFalse);
       }
     }
-  }, [scale]);
+  }, [interval, scale]);
 
   let tracks: Track[] = [];
 
   useEffect(() => {
-    console.log('scene', scene);  
     if (scene) {
       tracks = scene.timelines[0]?.tracks;
     }
   }, [ scene.timelines ] );
 
-  console.log("currentTime", currentTime);
+  useEffect(() => {
+    const percentTime = currentTime / 10;
+    setScrubberValue(percentTime);
+  }, [ currentTime ]);
 
   const getClipDimensions = (clip: Clip) => {
     const leftPosition = scale * (clip.start / 10 );
@@ -64,11 +84,46 @@ const Timeline = () => {
     }
   }
 
+  const getScrubberPosition = () => {
+    let newPosition = (scale * scrubberValue) - 25;
+    if( newPosition < -25 ) {
+      newPosition = -25;
+    } else if( newPosition > scale ) {
+      newPosition = scale;
+    }
+    return `${newPosition}px`;
+  }
+
   return (
       <div className="timeline">
         <div className="timeline-header">
-          <div className="clip-window" ref={clipWindowRef} style={{ width: `${scale}px` }}>
-            <input className="scrubber" type="range" min="0" max={10} step="0.01" value={currentTime} onChange={
+          <div className="clip-window" ref={clipWindowRef} style={{ width: `${scale}px` }} onMouseDown={(e) =>{
+                setDragging(true);
+                const rect = clipWindowRef?.current?.getBoundingClientRect();
+                if(rect) {
+                  const x = e.clientX - rect.left;
+                  const percent = x / rect.width;
+                  setScrubberValue(percent);
+                  dispatch(setCurrentTime(percent * 10));
+                }
+              }}
+              onMouseMove={(e) => {
+                if (dragging) {
+                  const rect = clipWindowRef?.current?.getBoundingClientRect();
+                  if(rect) {
+                    const x = e.clientX - rect.left;
+                    const percent = x / rect.width;
+                    setScrubberValue(percent);
+                    dispatch(setCurrentTime(percent * 10));
+                  }
+                }
+              }}>
+            <div className="scrubber" style={{ left: `${ getScrubberPosition() }` }}>
+              <div className="current-time">{currentTime}</div>
+              <div className="handle"></div>
+              <div className="bar"></div>
+            </div>
+            <input className="scrubber-input" type="range" min="0" max={10} step="0.1" value={currentTime} onChange={
               (e) => {
                 dispatch(setCurrentTime(parseFloat(e.target.value)));
               }
@@ -91,9 +146,9 @@ const Timeline = () => {
                     <span>{track.type}</span>
                 </div>
                 <div className="clip-container" style={{ width: `${scale}px` }}>
-                  { track.clips.map((clip: Clip) => {
+                  { track.clips.map((clip: Clip, index) => {
                     return (
-                      <div key={clip.id} className={ selectedClips[0]?.id === clip.id ? 'selected clip' : 'clip' } style={ getClipDimensions(clip) } >
+                      <div key={index} className={ selectedClips[0]?.id === clip.id ? 'selected clip' : 'clip' } style={ getClipDimensions(clip) } >
                       </div>
                     )
                   })}
