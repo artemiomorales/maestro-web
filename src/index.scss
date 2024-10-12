@@ -72,6 +72,21 @@ body {
             &.selected {
                 background: lightblue;
             }
+
+            .clip-handle {
+                height: 100%;
+                cursor: ew-resize;
+                position: absolute;
+                width: 5px;
+            }
+
+            .clip-left-handle {
+                left: 0;
+            }
+
+            .clip-right-handle {
+                right: 0;
+            }
         }
     }
 

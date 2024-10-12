@@ -1,14 +1,16 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Clip, setSelectedTracks, setSelectedClips, modifyClips } from "../redux/slices/editorSlice";
 import { Track, setCurrentTime } from "../redux/slices/editorSlice";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { current } from "@reduxjs/toolkit";
-
+import { useEffect, useRef, useState } from "react";
 
 interface DraggingClipOffset {
+  type: ClipAction;
   clipStart: number;
+  clipEnd: number;
   x: number;
 }
+
+type ClipAction = 'translate' | 'resizeStart' | 'resizeEnd';
 
 const Timeline = () => {
   const dispatch = useDispatch();
@@ -23,7 +25,6 @@ const Timeline = () => {
   const {
     scene,
     currentTime,
-    selectedNodes,
     selectedTracks,
     selectedClips,
 } = useSelector( (state: any) => state.editor);
@@ -33,7 +34,6 @@ const approximatelyEqual = (v1: number, v2: number, epsilon = 0.001) =>
 
   useEffect(() => {
     if (clipWindowRef.current) {
-      const clipWindow = clipWindowRef.current;
       const newHashes = [];
       setInterval(scale / 100);
       for (let i = interval; i < scale || approximatelyEqual(i, scale) ; i += interval) {
@@ -54,7 +54,7 @@ const approximatelyEqual = (v1: number, v2: number, epsilon = 0.001) =>
       const setDraggingFalse = () => {
         console.log('dragging end');
         setIsScrubbing(false);
-        setDraggingClipOffset(0);
+        setDraggingClipOffset(null);
       }
 
       window.addEventListener('wheel', callSetScale, { passive: false });
@@ -101,18 +101,43 @@ const approximatelyEqual = (v1: number, v2: number, epsilon = 0.001) =>
     return `${newPosition}px`;
   }
 
+  const callSetDraggingClipOffset = (clip: Clip, type: ClipAction, e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = clipWindowRef?.current?.getBoundingClientRect();
+    if(rect) {
+      setDraggingClipOffset( {
+        type: type,
+        clipStart: clip.start,
+        clipEnd: clip.end,
+        x: e.clientX - rect.left,
+      });
+    }
+  }
+
   return (
       <div className="timeline" onMouseMove={(e) => {
         if ( draggingClipOffset ) {
           const rect = clipWindowRef?.current?.getBoundingClientRect();
-          if(rect) {
+          if ( rect ) {
             const deltaX = (e.clientX - rect.left) - draggingClipOffset.x;
             const offset = deltaX * 10 / scale;
-            const newClip = {
-              ...selectedClips[0],
-              start: draggingClipOffset.clipStart + offset,
-              end: (draggingClipOffset.clipStart + offset + selectedClips[0].duration)
-            };
+            let newClip;
+            if ( draggingClipOffset.type === 'translate' ) {
+              newClip = {
+                ...selectedClips[0],
+                start: draggingClipOffset.clipStart + offset,
+                end: draggingClipOffset.clipEnd + offset
+              };
+            } else if ( draggingClipOffset.type === 'resizeStart' ) {
+              newClip = {
+                ...selectedClips[0],
+                start: draggingClipOffset.clipStart + offset,
+              };
+            } else if ( draggingClipOffset.type === 'resizeEnd' ) {
+              newClip = {
+                ...selectedClips[0],
+                end: draggingClipOffset.clipEnd + offset,
+              };
+            }
             dispatch(modifyClips([newClip]));
           }
         }
@@ -173,15 +198,23 @@ const approximatelyEqual = (v1: number, v2: number, epsilon = 0.001) =>
                       onMouseDown={(e) => {
                         e.stopPropagation();
                         dispatch(setSelectedClips([clip]));
-                        const rect = clipWindowRef?.current?.getBoundingClientRect();
-                        if(rect) {
-                          setDraggingClipOffset( {
-                            clipStart: clip.start,
-                            x: e.clientX - rect.left,
-                          });
-                        }
+                        callSetDraggingClipOffset( clip, 'translate', e);
                       }}
                       >
+                        <div className="clip-left-handle clip-handle"
+                          onMouseDown={(e) => {
+                            e.stopPropagation();
+                            dispatch(setSelectedClips([clip]));
+                            callSetDraggingClipOffset( clip, 'resizeStart', e);
+                          }}
+                        ></div>
+                        <div className="clip-right-handle clip-handle"
+                          onMouseDown={(e) => {
+                            e.stopPropagation();
+                            dispatch(setSelectedClips([clip]));
+                            callSetDraggingClipOffset( clip, 'resizeEnd', e);
+                          }}
+                        ></div>
                       </div>
                     )
                   })}
