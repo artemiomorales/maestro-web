@@ -20,6 +20,7 @@ const Timeline = () => {
   const [ scrubberValue, setScrubberValue ] = useState<number>(0);
   const [ scale, setScale ] = useState<number>(3000);
   const [ interval, setInterval ] = useState<number>(30);
+  const timelineRef = useRef<HTMLDivElement>(null);
   const clipWindowRef = useRef<HTMLTableCellElement>(null);
 
   const {
@@ -33,19 +34,17 @@ const approximatelyEqual = (v1: number, v2: number, epsilon = 0.001) =>
   Math.abs(v1 - v2) < epsilon;
 
   useEffect(() => {
-    if (clipWindowRef.current) {
+    if (clipWindowRef.current && timelineRef.current) {
       const newHashes = [];
+      const timeline = timelineRef.current;
       setInterval(scale / 100);
-      for (let i = interval; i < scale || approximatelyEqual(i, scale) ; i += interval) {
+      for (let i = interval; i < Math.max(window.innerWidth, scale) || approximatelyEqual(i, scale) ; i += interval) {
         newHashes.push({ left: i + 'px' });
       }
       setHashes(newHashes);
 
       const callSetScale = (e: any) => {
-        if( e.target.className.includes('clip-window') ||
-            e.target.className.includes('clip-container') ||
-            e.target.className.includes('clip') ||
-            e.target.className.includes('scrubber')) {
+        if( !e.target.className.includes('track-label') && !e.target.className.includes('track-label-text') ) {
           e.preventDefault();
           setScale(scale + Math.round((e.deltaY + Number.EPSILON) * 100) / 100);
         }
@@ -57,11 +56,11 @@ const approximatelyEqual = (v1: number, v2: number, epsilon = 0.001) =>
         setDraggingClipOffset(null);
       }
 
-      window.addEventListener('wheel', callSetScale, { passive: false });
+      timeline.addEventListener('wheel', callSetScale, { passive: false });
       window.addEventListener('mouseup', setDraggingFalse);
   
       return () => {
-        window.removeEventListener('wheel', callSetScale);
+        timeline.removeEventListener('wheel', callSetScale);
         window.removeEventListener('mouseup', setDraggingFalse);
       }
     }
@@ -114,7 +113,7 @@ const approximatelyEqual = (v1: number, v2: number, epsilon = 0.001) =>
   }
 
   return (
-      <div className="timeline" onMouseMove={(e) => {
+      <div className="timeline" ref={timelineRef} onMouseMove={(e) => {
         if ( draggingClipOffset ) {
           const rect = clipWindowRef?.current?.getBoundingClientRect();
           if ( rect ) {
@@ -189,7 +188,7 @@ const approximatelyEqual = (v1: number, v2: number, epsilon = 0.001) =>
                     e.stopPropagation();
                     dispatch(setSelectedTracks([track]));
                 }}>
-                    <span>{track.type}</span>
+                    <span className="track-label-text">{track.type}</span>
                 </div>
                 <div className="clip-container" style={{ width: `${scale}px` }}>
                   { track.clips.map((clip: Clip, index) => {
