@@ -273,19 +273,19 @@
             "duration": 10,
             "tracks": [
                 {
-                    "id": "dafrbaee",
+                    "id": "xkj2p9m7",
                     "target": "557c73d4-02ea-47d7-9760-4824a45c8cb1",
                     "type": "opacity",
                     "clips": [
                         {
-                            "id": "fdaiofe1",
+                            "id": "xkj2p9m7",
                             "start": 0,
                             "end": 0.5,
                             "initialOpacity": 0,
                             "targetOpacity": 1
                         },
                         {
-                            "id": "fdaiofe2",
+                            "id": "a3f8q2r5",
                             "start": 0.5,
                             "end": 1,
                             "initialOpacity": 1,
@@ -299,12 +299,14 @@
                     "type": "opacity",
                     "clips": [
                         {
+                            "id": "b7t9z4y6",
                             "start": 0.5,
                             "end": 1,
                             "opacityStart": 0,
                             "opacityEnd": 1
                         },
                         {
+                            "id": "c1d5n8x3",
                             "start": 1,
                             "end": 1.5,
                             "opacityStart": 1,
@@ -318,12 +320,14 @@
                     "type": "opacity",
                     "clips": [
                         {
+                            "id": "e4h7j1k9",
                             "start": 1,
                             "end": 1.5,
                             "opacityStart": 0,
                             "opacityEnd": 1
                         },
                         {
+                            "id": "f2l8m6n0",
                             "start": 1.5,
                             "end": 2,
                             "opacityStart": 1,
@@ -337,12 +341,14 @@
                     "type": "opacity",
                     "clips": [
                         {
+                            "id": "g5q3r2s8",
                             "start": 1.5,
                             "end": 2,
                             "opacityStart": 0,
                             "opacityEnd": 1
                         },
                         {
+                            "id": "h9t1u4v7",
                             "start": 2,
                             "end": 2.5,
                             "opacityStart": 1,
@@ -356,12 +362,14 @@
                     "type": "opacity",
                    "clips": [
                         {
+                            "id": "i6w5x3y2",
                             "start": 2,
                             "end": 2.5,
                             "opacityStart": 0,
                             "opacityEnd": 1
                         },
                         {
+                            "id": "j8z7a1b4",
                             "start": 2.5,
                             "end": 3,
                             "opacityStart": 1,
@@ -375,12 +383,14 @@
                     "type": "opacity",
                     "clips": [
                         {
+                            "id": "k2c9d5e6",
                             "start": 2.5,
                             "end": 3,
                             "opacityStart": 0,
                             "opacityEnd": 1
                         },
                         {
+                            "id": "l3f7g8h1",
                             "start": 3,
                             "end": 3.5,
                             "opacityStart": 1,
@@ -394,12 +404,14 @@
                     "type": "opacity",
                     "clips": [
                         {
+                            "id": "m0i2j4k9",
                             "start": 3,
                             "end": 3.5,
                             "opacityStart": 0,
                             "opacityEnd": 1
                         },
                         {
+                            "id": "n5l6m3n8",
                             "start": 3.5,
                             "end": 4,
                             "opacityStart": 1,
@@ -413,12 +425,14 @@
                     "type": "opacity",
                     "clips": [
                         {
+                            "id": "o7p1q2r4",
                             "start": 3.5,
                             "end": 4,
                             "opacityStart": 0,
                             "opacityEnd": 1
                         },
                         {
+                            "id": "p9s8t6u3",
                             "start": 4,
                             "end": 4.5,
                             "opacityStart": 1,
@@ -432,12 +446,14 @@
                     "type": "opacity",
                     "clips": [
                         {
+                            "id": "q4v5w7x1",
                             "start": 4,
                             "end": 4.5,
                             "opacityStart": 0,
                             "opacityEnd": 1
                         },
                         {
+                            "id": "r2y3z8a0",
                             "start": 4.5,
                             "end": 5,
                             "opacityStart": 1,
@@ -451,12 +467,14 @@
                     "type": "opacity",
                     "clips": [
                         {
+                            "id": "s6b9c1d5",
                             "start": 4.5,
                             "end": 5,
                             "opacityStart": 0,
                             "opacityEnd": 1
                         },
                         {
+                            "id": "t8e4f7g2",
                             "start": 5,
                             "end": 5.5,
                             "opacityStart": 1,
@@ -470,12 +488,14 @@
                     "type": "opacity",
                     "clips": [
                         {
+                            "id": "u1h3i5j9",
                             "start": 5,
                             "end": 5.5,
                             "opacityStart": 0,
                             "opacityEnd": 1
                         },
                         {
+                            "id": "v7k2l8m4",
                             "start": 5.5,
                             "end": 6,
                             "opacityStart": 1,
@@ -489,12 +509,14 @@
                     "type": "opacity",
                     "clips": [
                         {
+                            "id": "w9x0y1z2",
                             "start": 5.5,
                             "end": 6,
                             "opacityStart": 0,
                             "opacityEnd": 1
                         },
                         {
+                            "id": "a3b4c5d6",
                             "start": 6,
                             "end": 6.5,
                             "opacityStart": 1,
@@ -508,12 +530,14 @@
                     "type": "opacity",
                     "clips": [
                         {
+                            "id": "e7f8g9h0",
                             "start": 6,
                             "end": 6.5,
                             "opacityStart": 0,
                             "opacityEnd": 1
                         },
                         {
+                            "id": "i1j2k3l4",
                             "start": 6.5,
                             "end": 7,
                             "opacityStart": 1,

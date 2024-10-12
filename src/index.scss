@@ -68,6 +68,10 @@ body {
             background: gray;
             position: absolute;
             height: 100%;
+
+            &.selected {
+                background: lightblue;
+            }
         }
     }
 

@@ -1,13 +1,20 @@
 import { useDispatch, useSelector } from "react-redux";
-import { Clip, setSelectedTracks } from "../redux/slices/editorSlice";
+import { Clip, setSelectedTracks, setSelectedClips, modifyClips } from "../redux/slices/editorSlice";
 import { Track, setCurrentTime } from "../redux/slices/editorSlice";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { current } from "@reduxjs/toolkit";
 
+
+interface DraggingClipOffset {
+  clipStart: number;
+  x: number;
+}
+
 const Timeline = () => {
   const dispatch = useDispatch();
   const [ hashes, setHashes ] = useState<object[]>([]);
-  const [ dragging, setDragging ] = useState<boolean>(false);
+  const [ isScrubbing, setIsScrubbing ] = useState<boolean>(false);
+  const [ draggingClipOffset, setDraggingClipOffset ] = useState<DraggingClipOffset | null>( null );
   const [ scrubberValue, setScrubberValue ] = useState<number>(0);
   const [ scale, setScale ] = useState<number>(3000);
   const [ interval, setInterval ] = useState<number>(30);
@@ -38,7 +45,6 @@ const approximatelyEqual = (v1: number, v2: number, epsilon = 0.001) =>
         if( e.target.className.includes('clip-window') ||
             e.target.className.includes('clip-container') ||
             e.target.className.includes('clip') ||
-            e.target.className.includes('track') ||
             e.target.className.includes('scrubber')) {
           e.preventDefault();
           setScale(scale + Math.round((e.deltaY + Number.EPSILON) * 100) / 100);
@@ -47,7 +53,8 @@ const approximatelyEqual = (v1: number, v2: number, epsilon = 0.001) =>
 
       const setDraggingFalse = () => {
         console.log('dragging end');
-        setDragging(false);
+        setIsScrubbing(false);
+        setDraggingClipOffset(0);
       }
 
       window.addEventListener('wheel', callSetScale, { passive: false });
@@ -95,10 +102,24 @@ const approximatelyEqual = (v1: number, v2: number, epsilon = 0.001) =>
   }
 
   return (
-      <div className="timeline">
+      <div className="timeline" onMouseMove={(e) => {
+        if ( draggingClipOffset ) {
+          const rect = clipWindowRef?.current?.getBoundingClientRect();
+          if(rect) {
+            const deltaX = (e.clientX - rect.left) - draggingClipOffset.x;
+            const offset = deltaX * 10 / scale;
+            const newClip = {
+              ...selectedClips[0],
+              start: draggingClipOffset.clipStart + offset,
+              end: (draggingClipOffset.clipStart + offset + selectedClips[0].duration)
+            };
+            dispatch(modifyClips([newClip]));
+          }
+        }
+      }}>
         <div className="timeline-header">
           <div className="clip-window" ref={clipWindowRef} style={{ width: `${scale}px` }} onMouseDown={(e) =>{
-                setDragging(true);
+                setIsScrubbing(true);
                 const rect = clipWindowRef?.current?.getBoundingClientRect();
                 if(rect) {
                   const x = e.clientX - rect.left;
@@ -108,7 +129,7 @@ const approximatelyEqual = (v1: number, v2: number, epsilon = 0.001) =>
                 }
               }}
               onMouseMove={(e) => {
-                if (dragging) {
+                if (isScrubbing) {
                   const rect = clipWindowRef?.current?.getBoundingClientRect();
                   if(rect) {
                     const x = e.clientX - rect.left;
@@ -148,7 +169,19 @@ const approximatelyEqual = (v1: number, v2: number, epsilon = 0.001) =>
                 <div className="clip-container" style={{ width: `${scale}px` }}>
                   { track.clips.map((clip: Clip, index) => {
                     return (
-                      <div key={index} className={ selectedClips[0]?.id === clip.id ? 'selected clip' : 'clip' } style={ getClipDimensions(clip) } >
+                      <div key={index} className={ selectedClips[0]?.id === clip.id ? 'selected clip' : 'clip' } style={ getClipDimensions(clip) }
+                      onMouseDown={(e) => {
+                        e.stopPropagation();
+                        dispatch(setSelectedClips([clip]));
+                        const rect = clipWindowRef?.current?.getBoundingClientRect();
+                        if(rect) {
+                          setDraggingClipOffset( {
+                            clipStart: clip.start,
+                            x: e.clientX - rect.left,
+                          });
+                        }
+                      }}
+                      >
                       </div>
                     )
                   })}

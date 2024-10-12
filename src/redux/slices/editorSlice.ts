@@ -80,6 +80,19 @@ const editorSlice = createSlice({
     },
     setSelectedClips: (state, action: PayloadAction<Clip[]>) => {
       state.selectedClips = action.payload;
+    },
+    modifyClips: (state, action: PayloadAction<Clip[]>) => {
+      state.scene.timelines.forEach(timeline => {
+        timeline.tracks.forEach(track => {
+          track.clips.forEach(clip => {
+            const targetClip = action.payload.find(c => c.id === clip.id);
+            if(targetClip) {
+              clip.start = targetClip.start;
+              clip.end = targetClip.end;
+            }
+          })
+        })
+      })
     }
   },
 });
@@ -90,7 +103,8 @@ export const {
     setScene,
     setSelectedNodes,
     setSelectedTracks,
-    setSelectedClips
+    setSelectedClips,
+    modifyClips
 } = editorSlice.actions;
 
 export default editorSlice.reducer;
