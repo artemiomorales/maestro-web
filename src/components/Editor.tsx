@@ -11,6 +11,7 @@ import {
     setResizerActive
 } from '../redux/slices/windowSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import { EditorContext, EditorContextProvider } from '../context/EditorContextProvider';
 
 const Editor = () => {
     const {
@@ -80,35 +81,37 @@ const Editor = () => {
     });
 
     return (
-        <div className="editor">
-            <div className="widget-top" ref={topWidgetRef}>
-                <Hierarchy />
-                <div className="resizer resizer-ew top-left-resizer"
+        <EditorContextProvider>
+            <div className="editor">
+                <div className="widget-top" ref={topWidgetRef}>
+                    <Hierarchy />
+                    <div className="resizer resizer-ew top-left-resizer"
+                        onMouseDown={ (e) => {
+                            dispatch(setResizerActive("topLeft"));
+                            setStartXDrag(e.clientX);
+                        }}
+                    ></div>
+                    <Preview />
+                    <div className="resizer resizer-ew top-right-resizer"
+                        onMouseDown={ (e) => {
+                            dispatch(setResizerActive("topRight"));
+                            setStartXDrag(e.clientX);
+                        }}
+                    ></div>
+                    <Inspector />
+                </div>
+                <div className="resizer resizer-ns bottom-resizer"
                     onMouseDown={ (e) => {
-                        dispatch(setResizerActive("topLeft"));
-                        setStartXDrag(e.clientX);
+                        dispatch(setResizerActive("bottom"));
+                        setStartYDrag(e.clientY);
                     }}
                 ></div>
-                <Preview />
-                <div className="resizer resizer-ew top-right-resizer"
-                    onMouseDown={ (e) => {
-                        dispatch(setResizerActive("topRight"));
-                        setStartXDrag(e.clientX);
-                    }}
-                ></div>
-                <Inspector />
+                <div className="widget-bottom" ref={bottomWidgetRef}>
+                    <Controls />
+                    <Timeline />
+                </div>
             </div>
-            <div className="resizer resizer-ns bottom-resizer"
-                onMouseDown={ (e) => {
-                    dispatch(setResizerActive("bottom"));
-                    setStartYDrag(e.clientY);
-                }}
-            ></div>
-            <div className="widget-bottom" ref={bottomWidgetRef}>
-                <Controls />
-                <Timeline />
-            </div>
-        </div>
+        </EditorContextProvider>
     );
 };
 

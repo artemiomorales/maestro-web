@@ -1,7 +1,8 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Clip, setSelectedTracks, setSelectedClips, modifyClips } from "../redux/slices/editorSlice";
 import { Track, setCurrentTime } from "../redux/slices/editorSlice";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
+import { EditorContext } from "../context/EditorContextProvider";
 
 interface DraggingClipOffset {
   type: ClipAction;
@@ -14,6 +15,7 @@ type ClipAction = 'translate' | 'resizeStart' | 'resizeEnd';
 
 const Timeline = () => {
   const dispatch = useDispatch();
+  const { previewIframeRef } = useContext(EditorContext);
   const [ hashes, setHashes ] = useState<object[]>([]);
   const [ isScrubbing, setIsScrubbing ] = useState<boolean>(false);
   const [ draggingClipOffset, setDraggingClipOffset ] = useState<DraggingClipOffset | null>( null );
@@ -22,6 +24,8 @@ const Timeline = () => {
   const [ interval, setInterval ] = useState<number>(30);
   const timelineRef = useRef<HTMLDivElement>(null);
   const clipWindowRef = useRef<HTMLTableCellElement>(null);
+
+  console.log(previewIframeRef);
 
   const {
     scene,
@@ -131,6 +135,7 @@ const approximatelyEqual = (v1: number, v2: number, epsilon = 0.001) =>
               };
             }
             dispatch(modifyClips([newClip]));
+            previewIframeRef?.current?.contentWindow?.postMessage({ type: 'MODIFY_CLIPS', payload: { clips: [newClip] } }, '*'); 
           }
         }
       }}>

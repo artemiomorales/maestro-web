@@ -31,6 +31,12 @@ function handleMessage(event) {
     }
     if(eventData.type === 'LOAD_SCENE') {
         debounce( handleLoadScene(eventData.payload.scene) );
+    }   
+    if(eventData.type === 'LOAD_SEQUENCE') {
+        debounce( handleLoadSequence(eventData.payload.sequence) );
+    }
+    if(eventData.type === 'MODIFY_CLIPS') {
+        debounce( modifyClips(eventData.payload.clips) );
     }
     if(eventData.type === 'SET_ELAPSED_TIME') {
         debounce( setSequenceTime(eventData.payload.currentTime) );
@@ -47,6 +53,7 @@ function handleResize(parentWindowHeight) {
 }
 
 let scene = null;
+let selectedSequence = null;
 
 function handleLoadScene(remoteSceneData) {
     scene = deepClone(remoteSceneData);
@@ -57,10 +64,6 @@ function handleLoadScene(remoteSceneData) {
         scene.nodes.forEach(dataElement => {
             const stageElement = document.createElement(dataElement.type);
 
-            dataElement.clips.forEach(clip => {
-                clip.duration = clip.end - clip.start;
-            });
-
             if (dataElement.type === 'img') {
                 stageElement.src = dataElement.path;
             }
@@ -69,8 +72,7 @@ function handleLoadScene(remoteSceneData) {
                 stageElement.src = dataElement.path;
                 stageElement.autoplay = dataElement.autoplay;
                 dataElement.isPlaying = dataElement.autoplay;
-            }
-
+            }            
             stage.appendChild(stageElement);
             nodes.push({
                 ...dataElement,
@@ -78,6 +80,38 @@ function handleLoadScene(remoteSceneData) {
             });
         });
     }
+}
+
+function handleLoadSequence(remoteSequenceData) {
+    selectedSequence = deepClone(remoteSequenceData);
+    if(selectedSequence.tracks) {
+        selectedSequence.tracks.forEach(track => {
+            track.clips.forEach(clip => {
+                clip.duration = clip.end - clip.start;
+            });
+            const node = nodes.find( node => node.id === track.target );
+            if(node) {
+                if(!node.clips) {
+                    node.clips = [];
+                }
+                node.clips.push(...track.clips);
+            }
+        });
+    }
+
+    console.log(scene);
+}
+
+function modifyClips(clips) {
+    nodes.forEach(node => {
+        node.clips.forEach(nodeClip => {
+            const newClip = clips.find(clip => clip.id === nodeClip.id);
+            if(newClip) {
+                nodeClip.start = newClip.start;
+                nodeClip.end = newClip.end;
+            }
+        });
+    });
 }
 
 function modifySequence(delta) {

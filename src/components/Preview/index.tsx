@@ -1,7 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setPreviewWindowHeight } from '../../redux/slices/windowSlice';
 import { setCurrentTime } from '../../redux/slices/editorSlice';
+import { EditorContext } from '../../context/EditorContextProvider';
 
 const PreviewWindow = () => {
     const {
@@ -55,12 +56,13 @@ const PreviewIframe = () => {
     const {
         scene,
         currentTime,
+        selectedSequence,
     } = useSelector( (state: any) => state.editor);
 
-    const iframeRef = useRef<HTMLIFrameElement>(null);
+    const { previewIframeRef } = useContext(EditorContext);
 
     useEffect(() => {
-        const iframe = iframeRef.current;
+        const iframe = previewIframeRef?.current;
         if ( !iframe ) return;
 
         const resize = () => {
@@ -68,8 +70,8 @@ const PreviewIframe = () => {
             iframe.contentWindow?.postMessage(message, '*');
         }
         const loadScene = () => {
-            const message = { type: 'LOAD_SCENE', payload: { scene: scene }  };
-            iframe.contentWindow?.postMessage(message, '*');
+            iframe.contentWindow?.postMessage({ type: 'LOAD_SCENE', payload: { scene }  }, '*');
+            iframe.contentWindow?.postMessage({ type: 'LOAD_SEQUENCE', payload: { sequence: selectedSequence }  }, '*');
         }
         const preparePlayer = () => {
             resize();
@@ -102,7 +104,7 @@ const PreviewIframe = () => {
     }, [dispatch, previewWindowHeight, scene]);
 
     useEffect(() => {
-        const iframe = iframeRef.current;
+        const iframe = previewIframeRef?.current;
         if ( !iframe ) return;
 
         const message = { type: 'SET_ELAPSED_TIME', payload: { currentTime }  };
@@ -111,7 +113,7 @@ const PreviewIframe = () => {
     }, [ currentTime ]);
 
     useEffect(() => {
-        const iframe = iframeRef.current;
+        const iframe = previewIframeRef?.current;
         if ( !iframe ) return;
 
         if( resizerActive ) {
@@ -127,7 +129,7 @@ const PreviewIframe = () => {
             <iframe
                 src="/player/index.html"
                 title="Player"
-                ref={iframeRef}
+                ref={previewIframeRef}
             ></iframe>
         </div>
     )

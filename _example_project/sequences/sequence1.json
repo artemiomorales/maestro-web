@@ -45,7 +45,7 @@
         },
         {
             "id": "ceadvaseaecc",
-            "target": "ecb463cf-52a4-4aaa-bc10-6aa6d05dea9a",
+            "target": "ecb463cf-52a4-4aaa-bc10-6aa6d059a",
             "type": "opacity",
             "clips": [
                 {
@@ -66,7 +66,7 @@
         },
         {
             "id": "dacdadaweceeg",
-            "target": "f42fd-fff6-4097-98e0-488f1812c00d",
+            "target": "f42fd6d4-fff6-4097-98e0-488f1812c00d",
             "type": "opacity",
             "clips": [
                 {
@@ -87,7 +87,7 @@
         },
         {
             "id": "dfadscasdadcd",
-            "target": "f42fd6d4-fff6-4097-98e0-488f18",
+            "target": "e7353dbf-b21b-4118-84c3-92f29475e44a",
             "type": "opacity",
            "clips": [
                 {
@@ -108,7 +108,7 @@
         },
         {
             "id": "dfasdcasdacsdada",
-            "target": "f426d4-fff6-4097-98e0-48812c00d",
+            "target": "6752b3d9-7e3d-4bb2-a82d-f336480b554f",
             "type": "opacity",
             "clips": [
                 {
@@ -129,7 +129,7 @@
         },
         {
             "id": "fdadfadsacdcasdfascd",
-            "target": "f42fd6d4-7-98e0-488f1812c00d",
+            "target": "96a7f9ae-10cb-4644-87e0-8339ec13dcaf",
             "type": "opacity",
             "clips": [
                 {
@@ -150,7 +150,7 @@
         },
         {
             "id": "fdafdasdfasd",
-            "target": "f42fd6d4-fff6-409-488f1812c00d",
+            "target": "6b2684f6-46f4-4778-99cf-ed1b380677e0",
             "type": "opacity",
             "clips": [
                 {
@@ -171,7 +171,7 @@
         },
         {
             "id": "fdasfdasdfdfasd",
-            "target": "f4ff6-4097-98e0-488f1812c00d",
+            "target": "72ce9c45-15f2-4d62-a1ad-7740a4dea1c7",
             "type": "opacity",
             "clips": [
                 {
@@ -192,7 +192,7 @@
         },
         {
             "id": "fdasdfasdfasdf",
-            "target": "f42fd6d4-fff6-4097-98e0-4812c00d",
+            "target": "0afc1509-b7b2-4f91-bfb4-c93451f47c0b",
             "type": "opacity",
             "clips": [
                 {
@@ -213,7 +213,7 @@
         },
         {
             "id": "dfasdfadsfads",
-            "target": "f42fd6d4-fff6-e0-488f1812c00d",
+            "target": "55bfdc6d-51ec-4d58-b1cd-5d5e7a3fe0f8",
             "type": "opacity",
             "clips": [
                 {
@@ -234,7 +234,7 @@
         },
         {
             "id": "dfasdfasdfad",
-            "target": "f42fd6d97-98e0-488f1812c00d",
+            "target": "73200d03-e987-41c7-8af3-8361d390bfc1",
             "type": "opacity",
             "clips": [
                 {
@@ -255,7 +255,7 @@
         },
         {
             "id": "fdasfdadfaf",
-            "target": "f42fd6d4-fff698e0-488f1812c00d",
+            "target": "ccda90b4-cce8-49fd-800a-9f52be52c373",
             "type": "opacity",
             "clips": [
                 {
@@ -271,6 +271,19 @@
                     "end": 7,
                     "opacityStart": 1,
                     "opacityEnd": 0
+                }
+            ]
+        },
+        {
+            "id": "dfpaoijdoadpoijaea",
+            "target": "f40cf7d5-f580-4770-965d-f8449d82c9d0",
+            "type": "volume",
+            "clips": [
+                {
+                    "start": 6,
+                    "end": 6.5,
+                    "volumeStart": 1,
+                    "volumeEnd": 0
                 }
             ]
         }
