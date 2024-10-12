@@ -25,6 +25,7 @@ const Timeline = () => {
 
   const {
     scene,
+    selectedSequence,
     currentTime,
     selectedTracks,
     selectedClips,
@@ -65,14 +66,6 @@ const approximatelyEqual = (v1: number, v2: number, epsilon = 0.001) =>
       }
     }
   }, [interval, scale]);
-
-  let tracks: Track[] = [];
-
-  useEffect(() => {
-    if (scene) {
-      tracks = scene.timelines[0]?.tracks;
-    }
-  }, [ scene.timelines ] );
 
   useEffect(() => {
     const percentTime = currentTime / 10;
@@ -181,7 +174,7 @@ const approximatelyEqual = (v1: number, v2: number, epsilon = 0.001) =>
             })}
           </div>
         </div>
-        { scene && scene.timelines[0] && scene.timelines[0].tracks.length > 0 && scene.timelines[0].tracks.map((track: Track) => {
+        { scene && selectedSequence && selectedSequence.tracks.length > 0 && selectedSequence.tracks.map((track: Track) => {
             return (
               <div key={track.id} className="track">
                 <div className={ selectedTracks[0]?.id === track.id ? 'selected track-label' : 'track-label' } onClick={(e) => {

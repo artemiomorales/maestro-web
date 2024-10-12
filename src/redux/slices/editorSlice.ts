@@ -7,7 +7,7 @@ export interface Vector2 {
 
 export interface Scene {
   nodes: Node[];
-  timelines: Timeline[];
+  sequences: Sequence[];
 } 
 
 export interface Node {
@@ -34,7 +34,7 @@ export interface Track {
   clips: Clip[];
 }
 
-export interface Timeline {
+export interface Sequence {
   tracks: Track[];
 }
 
@@ -42,6 +42,8 @@ export interface EditorState {
     duration: number;
     currentTime: number;
     scene: Scene;
+    sequences: Sequence[];
+    selectedSequence: Sequence;
     selectedNodes: Node[];
     selectedTracks: Track[];
     selectedClips: Clip[];
@@ -52,7 +54,11 @@ const initialState: EditorState = {
     currentTime: 0,
     scene: {
       nodes: [],
-      timelines: []
+      sequences: []
+    },
+    sequences: [],
+    selectedSequence: {
+      tracks: []
     },
     selectedNodes: [],
     selectedTracks: [],
@@ -72,6 +78,9 @@ const editorSlice = createSlice({
     setScene: (state, action: PayloadAction<Scene>) => {
       state.scene = action.payload;
     },
+    setSelectedSequence: (state, action: PayloadAction<Sequence>) => {
+      state.selectedSequence = action.payload;
+    },
     setSelectedNodes: (state, action: PayloadAction<Node[]>) => {
       state.selectedNodes = action.payload;
     },
@@ -82,15 +91,13 @@ const editorSlice = createSlice({
       state.selectedClips = action.payload;
     },
     modifyClips: (state, action: PayloadAction<Clip[]>) => {
-      state.scene.timelines.forEach(timeline => {
-        timeline.tracks.forEach(track => {
-          track.clips.forEach(clip => {
-            const targetClip = action.payload.find(c => c.id === clip.id);
-            if(targetClip) {
-              clip.start = targetClip.start;
-              clip.end = targetClip.end;
-            }
-          })
+      state.selectedSequence.tracks.forEach(track => {
+        track.clips.forEach(clip => {
+          const targetClip = action.payload.find(c => c.id === clip.id);
+          if(targetClip) {
+            clip.start = targetClip.start;
+            clip.end = targetClip.end;
+          }
         })
       })
     }
@@ -101,6 +108,7 @@ export const {
     setDuration,
     setCurrentTime,
     setScene,
+    setSelectedSequence,
     setSelectedNodes,
     setSelectedTracks,
     setSelectedClips,
