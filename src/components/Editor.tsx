@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Preview from './Preview';
 import Timeline from './Timeline';
 import Controls from './Controls';
@@ -67,7 +67,7 @@ const Editor = () => {
         }
     }, [topLeftResizerDelta, topRightResizerDelta, bottomResizerDelta, resizerActive, bottomWidgetHeight, topWidgetHeight]);
 
-    const handleMouseUp = (e: any) => {
+    const handleMouseUp = () => {
         dispatch(setResizerActive(null));
     }
 

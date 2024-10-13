@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setPreviewWindowHeight } from '../../redux/slices/windowSlice';
 import { setCurrentTime } from '../../redux/slices/editorSlice';

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import Editor from './components/Editor';
 import { setScene, setSelectedSequence } from './redux/slices/editorSlice';

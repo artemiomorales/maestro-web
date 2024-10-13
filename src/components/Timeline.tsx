@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setSelectedTracks, setSelectedClips, modifyClips, getSelectedClips } from "../redux/slices/editorSlice";
 import { setCurrentTime } from "../redux/slices/editorSlice";
 import { useContext, useEffect, useRef, useState } from "react";
-import { Clip, RootState } from "../redux/types";
+import { Clip, RootState, Track } from "../redux/types";
 import { EditorContext } from "../context/EditorContextProvider";
 
 interface DraggingClipOffsets {
@@ -102,19 +102,6 @@ const approximatelyEqual = (v1: number, v2: number, epsilon = 0.001) =>
       newPosition = scale;
     }
     return `${newPosition}px`;
-  }
-
-  const callSetDraggingClipOffset = (clip: Clip, type: ClipAction, e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = clipWindowRef?.current?.getBoundingClientRect();
-    const initialClipStates = draggingClipsOffsets?.initialClipStates || [];
-    initialClipStates.push(clip);
-    if(rect) {
-      setDraggingClipsOffsets( {
-        type: type,
-        initialClipStates,
-        x: e.clientX - rect.left,
-      } );
-    }
   }
 
   const callSetSelectedClips = (e: React.MouseEvent<HTMLDivElement>, clip: Clip, type: ClipAction) => {
@@ -217,7 +204,7 @@ const approximatelyEqual = (v1: number, v2: number, epsilon = 0.001) =>
                     <span className="track-label-text">{track.type}</span>
                 </div>
                 <div className="clip-container" style={{ width: `${scale}px` }}>
-                  { track.clips.map((clip: Clip, index) => {
+                  { track.clips.map((clip: Clip, index: number) => {
                     return (
                       <div key={index} className={ selectedClips.find((c: { id: string; }) => c.id === clip.id) ? 'selected clip' : 'clip' } style={ getClipDimensions(clip) }
                       onMouseDown={(e) => {

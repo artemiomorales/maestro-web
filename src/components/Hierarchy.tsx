@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setSelectedNodes, Node } from "../redux/slices/editorSlice";
+import { setSelectedNodes } from "../redux/slices/editorSlice";
+import { Node } from "../redux/types";
 
 const Hierarchy = () => {
     const dispatch = useDispatch();
