@@ -1,53 +1,5 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-
-export interface Vector2 {
-    x: number;
-    y: number;
-}
-
-export interface Scene {
-  nodes: Node[];
-  sequences: Sequence[];
-} 
-
-export interface Node {
-    id: number;
-    name: string;
-    position: Vector2;
-    scale: Vector2;
-    type: "text" | "img" | "video" | "audio";
-    path: string;
-}
-
-export interface Clip {
-  id: string;
-  start: number;
-  end: number;
-  opacityStart?: number;
-  opacityEnd?: number;
-}
-
-export interface Track {
-  id: string;
-  type: string;
-  path: string;
-  clips: Clip[];
-}
-
-export interface Sequence {
-  tracks: Track[];
-}
-
-export interface EditorState {
-    duration: number;
-    currentTime: number;
-    scene: Scene;
-    sequences: Sequence[];
-    selectedSequence: Sequence;
-    selectedNodes: Node[];
-    selectedTracks: Track[];
-    selectedClips: Clip[];
-}
+import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { RootState, EditorState, Scene, Sequence, Track, Clip, Node } from '../types';
 
 const initialState: EditorState = {
     duration: 0,
@@ -58,11 +10,11 @@ const initialState: EditorState = {
     },
     sequences: [],
     selectedSequence: {
-      tracks: []
+      tracks: [],
     },
     selectedNodes: [],
     selectedTracks: [],
-    selectedClips: []
+    selectedClipIds: []
 };
 
 const editorSlice = createSlice({
@@ -88,7 +40,18 @@ const editorSlice = createSlice({
       state.selectedTracks = action.payload;
     },
     setSelectedClips: (state, action: PayloadAction<Clip[]>) => {
-      state.selectedClips = action.payload;
+      const newSelectedClipIds: string[] = [...state.selectedClipIds];
+      state.selectedSequence.tracks.forEach(track => {
+        track.clips.forEach(clip => {
+          const targetClip = action.payload.find(c => c.id === clip.id);
+          if (targetClip) {
+            if (!state.selectedClipIds.some(c => c === targetClip.id)) {
+              newSelectedClipIds.push(targetClip.id);
+            }
+          }
+        })
+      });
+      state.selectedClipIds = newSelectedClipIds;
     },
     modifyClips: (state, action: PayloadAction<Clip[]>) => {
       state.selectedSequence.tracks.forEach(track => {
@@ -103,6 +66,16 @@ const editorSlice = createSlice({
     }
   },
 });
+export const getSelectedClips = createSelector(
+  ( state: RootState ) => state.editor.selectedSequence,
+  ( state: RootState ) => state.editor.selectedClipIds,
+  ( selectedSequence, selectedClipIds) => {
+    if(selectedSequence) {
+      return selectedSequence.tracks.flatMap(track => track.clips.filter(clip => selectedClipIds.includes(clip.id)));
+    }
+    return [];
+  }
+);
 
 export const { 
     setDuration,

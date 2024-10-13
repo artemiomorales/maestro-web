@@ -1,12 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-
-interface WindowState {
-    topLeftResizerDelta: number;
-    topRightResizerDelta: number;
-    bottomResizerDelta: number;
-    previewWindowHeight: number;
-    resizerActive: "topLeft" | "topRight" | "bottom" | null;
-}
+import { WindowState } from '../types';
 
 const initialState: WindowState = {
     topLeftResizerDelta: 0,

@@ -1,39 +1,47 @@
 import { useDispatch, useSelector } from "react-redux";
-import { Clip, setSelectedTracks, setSelectedClips, modifyClips } from "../redux/slices/editorSlice";
+import { Clip, setSelectedTracks, setSelectedClips, modifyClips, EditorState, getSelectedClips } from "../redux/slices/editorSlice";
 import { Track, setCurrentTime } from "../redux/slices/editorSlice";
 import { useContext, useEffect, useRef, useState } from "react";
 import { EditorContext } from "../context/EditorContextProvider";
 
-interface DraggingClipOffset {
+interface DraggingClipOffsets {
   type: ClipAction;
-  clipStart: number;
-  clipEnd: number;
+  initialClipStates: Clip[];
   x: number;
 }
 
 type ClipAction = 'translate' | 'resizeStart' | 'resizeEnd';
+
 
 const Timeline = () => {
   const dispatch = useDispatch();
   const { previewIframeRef } = useContext(EditorContext);
   const [ hashes, setHashes ] = useState<object[]>([]);
   const [ isScrubbing, setIsScrubbing ] = useState<boolean>(false);
-  const [ draggingClipOffset, setDraggingClipOffset ] = useState<DraggingClipOffset | null>( null );
+  const [ draggingClipsOffsets, setDraggingClipsOffsets ] = useState<DraggingClipOffsets | null>( null );
   const [ scrubberValue, setScrubberValue ] = useState<number>(0);
   const [ scale, setScale ] = useState<number>(3000);
   const [ interval, setInterval ] = useState<number>(30);
   const timelineRef = useRef<HTMLDivElement>(null);
   const clipWindowRef = useRef<HTMLTableCellElement>(null);
 
-  console.log(previewIframeRef);
-
   const {
     scene,
     selectedSequence,
     currentTime,
     selectedTracks,
-    selectedClips,
-} = useSelector( (state: any) => state.editor);
+    selectedClipIds,
+} = useSelector( (state: EditorState) => {
+  return state.editor;
+});
+
+  const selectedClips = useSelector(getSelectedClips);
+
+
+  console.log("selectedClips component", selectedClips);
+
+// console.log("selectedSequence", selectedSequence);
+// console.log("selectedClips", selectedClips);
 
 const approximatelyEqual = (v1: number, v2: number, epsilon = 0.001) =>
   Math.abs(v1 - v2) < epsilon;
@@ -56,9 +64,8 @@ const approximatelyEqual = (v1: number, v2: number, epsilon = 0.001) =>
       };
 
       const setDraggingFalse = () => {
-        console.log('dragging end');
         setIsScrubbing(false);
-        setDraggingClipOffset(null);
+        setDraggingClipsOffsets(null);
       }
 
       timeline.addEventListener('wheel', callSetScale, { passive: false });
@@ -99,44 +106,66 @@ const approximatelyEqual = (v1: number, v2: number, epsilon = 0.001) =>
 
   const callSetDraggingClipOffset = (clip: Clip, type: ClipAction, e: React.MouseEvent<HTMLDivElement>) => {
     const rect = clipWindowRef?.current?.getBoundingClientRect();
+    const initialClipStates = draggingClipsOffsets?.initialClipStates || [];
+    initialClipStates.push(clip);
     if(rect) {
-      setDraggingClipOffset( {
+      setDraggingClipsOffsets( {
         type: type,
-        clipStart: clip.start,
-        clipEnd: clip.end,
+        initialClipStates,
         x: e.clientX - rect.left,
-      });
+      } );
+    }
+  }
+
+  const callSetSelectedClips = (e: React.MouseEvent<HTMLDivElement>, clip: Clip, type: ClipAction) => {
+    // only add clip if it's not already in the array
+    const newSelectedClips = [...selectedClips, clip];
+    console.log("newSelectedClips", newSelectedClips);
+    if ( e.metaKey || selectedClips.length === 0) {
+      dispatch(setSelectedClips(newSelectedClips));
+    }
+    const rect = clipWindowRef?.current?.getBoundingClientRect();
+    if(rect) {
+      setDraggingClipsOffsets( {
+        type: type,
+        initialClipStates: newSelectedClips,
+        x: e.clientX - rect.left,
+      } );
     }
   }
 
   return (
       <div className="timeline" ref={timelineRef} onMouseMove={(e) => {
-        if ( draggingClipOffset ) {
+        if ( draggingClipsOffsets ) {
           const rect = clipWindowRef?.current?.getBoundingClientRect();
-          if ( rect ) {
-            const deltaX = (e.clientX - rect.left) - draggingClipOffset.x;
-            const offset = deltaX * 10 / scale;
-            let newClip;
-            if ( draggingClipOffset.type === 'translate' ) {
-              newClip = {
-                ...selectedClips[0],
-                start: draggingClipOffset.clipStart + offset,
-                end: draggingClipOffset.clipEnd + offset
-              };
-            } else if ( draggingClipOffset.type === 'resizeStart' ) {
-              newClip = {
-                ...selectedClips[0],
-                start: draggingClipOffset.clipStart + offset,
-              };
-            } else if ( draggingClipOffset.type === 'resizeEnd' ) {
-              newClip = {
-                ...selectedClips[0],
-                end: draggingClipOffset.clipEnd + offset,
-              };
+          if ( ! rect ) { return; }
+          const deltaX = (e.clientX - rect.left) - draggingClipsOffsets.x;
+          const offset = deltaX * 10 / scale;
+          const newClips: Clip[] = [];
+          selectedClips.forEach((clip: Clip) => {
+            const initialClipState = draggingClipsOffsets.initialClipStates.find((c: Clip) => c.id === clip.id);
+            if( initialClipState ) {
+              if ( draggingClipsOffsets.type === 'translate' ) {
+                newClips.push({
+                  ...clip,
+                  start: initialClipState.start + offset,
+                  end: initialClipState.end + offset
+                });
+              } else if ( draggingClipsOffsets.type === 'resizeStart' ) {
+                newClips.push({
+                  ...clip,
+                  start: initialClipState.start + offset,
+                });
+              } else if ( draggingClipsOffsets.type === 'resizeEnd' ) {
+                newClips.push({
+                  ...clip,
+                  end: initialClipState.end + offset,
+                });
+              }
             }
-            dispatch(modifyClips([newClip]));
-            previewIframeRef?.current?.contentWindow?.postMessage({ type: 'MODIFY_CLIPS', payload: { clips: [newClip] } }, '*'); 
-          }
+          });
+          dispatch(modifyClips(newClips));
+          previewIframeRef?.current?.contentWindow?.postMessage({ type: 'MODIFY_CLIPS', payload: { clips: newClips } }, '*');
         }
       }}>
         <div className="timeline-header">
@@ -191,25 +220,22 @@ const approximatelyEqual = (v1: number, v2: number, epsilon = 0.001) =>
                 <div className="clip-container" style={{ width: `${scale}px` }}>
                   { track.clips.map((clip: Clip, index) => {
                     return (
-                      <div key={index} className={ selectedClips[0]?.id === clip.id ? 'selected clip' : 'clip' } style={ getClipDimensions(clip) }
+                      <div key={index} className={ selectedClips.find((c: { id: string; }) => c.id === clip.id) ? 'selected clip' : 'clip' } style={ getClipDimensions(clip) }
                       onMouseDown={(e) => {
                         e.stopPropagation();
-                        dispatch(setSelectedClips([clip]));
-                        callSetDraggingClipOffset( clip, 'translate', e);
+                        callSetSelectedClips(e, clip, 'translate');
                       }}
                       >
                         <div className="clip-left-handle clip-handle"
                           onMouseDown={(e) => {
                             e.stopPropagation();
-                            dispatch(setSelectedClips([clip]));
-                            callSetDraggingClipOffset( clip, 'resizeStart', e);
+                            callSetSelectedClips(e, clip, 'resizeStart');
                           }}
                         ></div>
                         <div className="clip-right-handle clip-handle"
                           onMouseDown={(e) => {
                             e.stopPropagation();
-                            dispatch(setSelectedClips([clip]));
-                            callSetDraggingClipOffset( clip, 'resizeEnd', e);
+                            callSetSelectedClips(e, clip, 'resizeEnd');
                           }}
                         ></div>
                       </div>

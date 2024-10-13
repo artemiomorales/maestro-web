@@ -11,7 +11,7 @@ import {
     setResizerActive
 } from '../redux/slices/windowSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import { EditorContext, EditorContextProvider } from '../context/EditorContextProvider';
+import { EditorContextProvider } from '../context/EditorContextProvider';
 
 const Editor = () => {
     const {

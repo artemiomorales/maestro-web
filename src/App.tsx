@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import Editor from './components/Editor';
-import { Scene, Sequence, setScene, setSelectedSequence } from './redux/slices/editorSlice';
+import { setScene, setSelectedSequence } from './redux/slices/editorSlice';
 import sceneData from '../_example_project/scenes/scene.json';
 import sequenceData from '../_example_project/sequences/sequence1.json';
+import { Scene, Sequence } from './redux/types';
 
 const App = () => {
   const dispatch = useDispatch();
