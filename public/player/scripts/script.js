@@ -99,7 +99,7 @@ function handleLoadSequence(remoteSequenceData) {
         });
     }
 
-    console.log(scene);
+    console.log("nodes", nodes);
 }
 
 function modifyClips(clips) {
@@ -143,8 +143,6 @@ function setSequenceTime(targetTime) {
 }
 
 function processClip(currentNode, clip, time, index) {
-    // console.log('Processing clip:', clip);
-    // console.log('Time:', time);
     if (time > clip.start && time < clip.end) {
 
         const clipProgress = (time - clip.start) / (clip.end - clip.start);
@@ -161,9 +159,9 @@ function processClip(currentNode, clip, time, index) {
         }
 
         // Process opacity
-        if (clip.opacityStart !== undefined && clip.opacityEnd !== undefined) {
-            const opacityDelta = clip.opacityEnd - clip.opacityStart;
-            currentNode.stageElement.style.opacity = clip.opacityStart + (opacityDelta * clipProgress);
+        if (clip.initialOpacity !== undefined && clip.targetOpacity !== undefined) {
+            const opacityDelta = clip.targetOpacity - clip.initialOpacity;
+            currentNode.stageElement.style.opacity = clip.initialOpacity + (opacityDelta * clipProgress);
         }
 
         if (clip.volumeStart !== undefined && clip.volumeEnd !== undefined) {
@@ -177,18 +175,18 @@ function processClip(currentNode, clip, time, index) {
         }
     }
     else if (time <= clip.start && index === 0) {
-        if (clip.opacityStart !== undefined && clip.opacityEnd !== undefined) {
+        if (clip.initialOpacity !== undefined && clip.targetOpacity !== undefined) {
             // Reset opacity
-            currentNode.stageElement.style.opacity = clip.opacityStart;
+            currentNode.stageElement.style.opacity = clip.initialOpacity;
         }
         if (clip.volumeStart !== undefined && clip.volumeEnd !== undefined) {
             currentNode.stageElement.volume = clip.volumeStart;
         }
     }
     else if (time >= clip.end && index === currentNode.clips.length - 1) {
-        if (clip.opacityStart !== undefined && clip.opacityEnd !== undefined) {
+        if (clip.initialOpacity !== undefined && clip.targetOpacity !== undefined) {
             // Reset opacity
-            currentNode.stageElement.style.opacity = clip.opacityEnd;
+            currentNode.stageElement.style.opacity = clip.targetOpacity;
         }
         if (clip.volumeStart !== undefined && clip.volumeEnd !== undefined) {
             currentNode.stageElement.volume = clip.volumeEnd;

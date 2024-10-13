@@ -1,7 +1,8 @@
 import { useDispatch, useSelector } from "react-redux";
-import { Clip, setSelectedTracks, setSelectedClips, modifyClips, EditorState, getSelectedClips } from "../redux/slices/editorSlice";
-import { Track, setCurrentTime } from "../redux/slices/editorSlice";
+import { setSelectedTracks, setSelectedClips, modifyClips, getSelectedClips } from "../redux/slices/editorSlice";
+import { setCurrentTime } from "../redux/slices/editorSlice";
 import { useContext, useEffect, useRef, useState } from "react";
+import { Clip, RootState } from "../redux/types";
 import { EditorContext } from "../context/EditorContextProvider";
 
 interface DraggingClipOffsets {
@@ -30,8 +31,7 @@ const Timeline = () => {
     selectedSequence,
     currentTime,
     selectedTracks,
-    selectedClipIds,
-} = useSelector( (state: EditorState) => {
+} = useSelector( (state: RootState) => {
   return state.editor;
 });
 
@@ -120,7 +120,6 @@ const approximatelyEqual = (v1: number, v2: number, epsilon = 0.001) =>
   const callSetSelectedClips = (e: React.MouseEvent<HTMLDivElement>, clip: Clip, type: ClipAction) => {
     // only add clip if it's not already in the array
     const newSelectedClips = [...selectedClips, clip];
-    console.log("newSelectedClips", newSelectedClips);
     if ( e.metaKey || selectedClips.length === 0) {
       dispatch(setSelectedClips(newSelectedClips));
     }
