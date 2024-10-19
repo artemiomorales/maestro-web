@@ -19,19 +19,34 @@
  */
 
 // functions.php or custom plugin file
-function enqueue_react_app( $hook ) {
+function enqueue_react_app() {
 	// Check if we are on the add or edit screen for the 'scrollie' post type
 	if ( isset( $_GET['page'] ) && 'maestro-scrollie-template' === $_GET['page'] ) {
 		wp_enqueue_script(
-			'react-app',
+			'maestro-web-scripts',
 			$file_url = plugins_url( 'dist/assets/index.js', __FILE__ ),
 			array(), // Dependencies, if any
 			null, // Version
 			true // Load in footer
 		);
 
+		add_filter(
+			'script_loader_tag',
+			function (
+				$tag,
+				$handle
+			) {
+				if ( 'maestro-web-scripts' !== $handle ) {
+					return $tag;
+				}
+				return str_replace( '<script ', '<script type="module" ', $tag );
+			},
+			10,
+			2
+		);
+
 		wp_enqueue_style(
-			'react-app-style',
+			'maestro-web-styles',
 			$file_url = plugins_url( 'dist/assets/index.css', __FILE__ ),
 			array(), // Dependencies, if any
 			null // Version
@@ -75,34 +90,27 @@ function add_scrollie_admin_page() {
 add_action( 'admin_menu', 'add_scrollie_admin_page' );
 
 function display_scrollie_template() {
-	// Check user capabilities
-	if ( ! current_user_can( 'manage_options' ) ) {
-		return;
-	}
-
-	$html_content = <<<HTML
+	$html = <<<HTML
 		<!doctype html>
-		<html lang="en">
-		<head>
-			<meta charset="UTF-8" />
-			<link rel="icon" type="image/svg+xml" href="/vite.svg" />
-			<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-			<title>Vite + React + TS</title>
-		</head>
-		<body>
-			<h1>Maestro</h1>
-			<div id="root"></div>
-		</body>
+			<html lang="en">
+			<head>
+				<meta charset="UTF-8" />
+				<link rel="icon" type="image/svg+xml" href="/vite.svg" />
+				<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+				<title>Vite + React + TS</title>
+			</head>
+			<body>
+				<div id="root"></div>
+			</body>
 		</html>
 	HTML;
 
-	echo wp_kses_post( $html_content );
+	echo wp_kses_post( $html );
 }
-
 
 // Customize admin links
 
-function customize_add_new_post_link( $url, $post_id, $context ) {
+function customize_add_new_post_link( $url, $post_id ) {
 	if ( 'scrollie' === get_post_type( $post_id ) ) {
 		$url = admin_url( 'edit.php?post_type=scrollie&page=maestro-scrollie-template&post=' . $post_id );
 	}
