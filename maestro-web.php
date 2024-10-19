@@ -45,6 +45,17 @@ function enqueue_react_app() {
 			2
 		);
 
+		$nonce = wp_create_nonce( 'wp_rest' );
+
+		// Localize the script with the nonce
+		wp_localize_script(
+			'maestro-web-scripts',
+			'MaestroWebData', // This will be the global variable in JavaScript
+			array(
+				'nonce' => $nonce,
+			)
+		);
+
 		wp_enqueue_style(
 			'maestro-web-styles',
 			$file_url = plugins_url( 'build/assets/index.css', __FILE__ ),
@@ -63,6 +74,7 @@ function create_scrollie_post_type() {
 		'public'             => true,
 		'publicly_queryable' => true,
 		'show_in_rest'       => true,
+		'rest_base'          => 'scrollies',
 		'show_in_menu'       => true,
 		'show_in_nav_menus'  => true,
 		'show_in_admin_bar'  => true,
