@@ -24,7 +24,7 @@ function enqueue_react_app() {
 	if ( isset( $_GET['page'] ) && 'maestro-scrollie-template' === $_GET['page'] ) {
 		wp_enqueue_script(
 			'maestro-web-scripts',
-			$file_url = plugins_url( 'dist/assets/index.js', __FILE__ ),
+			$file_url = plugins_url( 'build/assets/index.js', __FILE__ ),
 			array(), // Dependencies, if any
 			null, // Version
 			true // Load in footer
@@ -47,7 +47,7 @@ function enqueue_react_app() {
 
 		wp_enqueue_style(
 			'maestro-web-styles',
-			$file_url = plugins_url( 'dist/assets/index.css', __FILE__ ),
+			$file_url = plugins_url( 'build/assets/index.css', __FILE__ ),
 			array(), // Dependencies, if any
 			null // Version
 		);
