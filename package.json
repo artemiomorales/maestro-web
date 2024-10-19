@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "type-check": "tsc --noEmit",
+    "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
     "watch-build": "nodemon --watch src --watch public --watch maestro-web.php --ext js,jsx,ts,tsx,php,scss --exec \"npm run build\""
