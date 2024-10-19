@@ -9,11 +9,10 @@ import { useLocation } from 'react-router-dom';
 
 const App = () => {
   const dispatch = useDispatch();
-  const [post, setPost] = useState(null);
+  const [postId, setPostId] = useState(null);
   const location = useLocation();
   const nonce = (window as Window).MaestroWebData?.nonce;
 
-  console.log('sceneData', sceneData);
   useEffect(() => {
 
     // Extract the 'post' parameter from the URL
@@ -32,17 +31,38 @@ const App = () => {
         .then(response => response.json())
         .then(data => {
           console.log('post', data);
-          setPost(data);
+          setPostId(data.id);
+
+          dispatch( setScene( JSON.parse(data.meta.scenes) as unknown as Scene ) );
+          dispatch( setSelectedSequence( JSON.parse(data.meta.sequences) as unknown as Sequence ) );
         })
         .catch(error => console.error('Error fetching post:', error));
     }
 
-    dispatch( setScene( sceneData as unknown as Scene ) );
-    dispatch( setSelectedSequence( sequenceData as unknown as Sequence ) );
-  }, [dispatch]);
+  }, [dispatch, location.search, nonce, postId]);
 
   return (
     <div className="app">
+      <button onClick={() => {
+        const jsonData = {
+          meta: {
+            scenes: JSON.stringify(sceneData), // Convert JSON to string
+            sequences: JSON.stringify(sequenceData)
+          }
+        };
+
+        fetch(`/wp-json/wp/v2/scrollies/${postId}`, {
+          method: 'POST', // Use POST or PUT depending on your needs
+          headers: {
+            'Content-Type': 'application/json',
+            'X-WP-Nonce': nonce, // Include the nonce for authentication
+          },
+          body: JSON.stringify(jsonData),
+        })
+          .then(response => response.json())
+          .then(data => console.log('Success:', data))
+          .catch(error => console.error('Error:', error));
+      }}>Save Data</button>
       <Editor />
     </div>
   );

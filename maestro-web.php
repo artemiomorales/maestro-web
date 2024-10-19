@@ -82,10 +82,38 @@ function create_scrollie_post_type() {
 		'capability_type'    => 'post',
 		'has_archive'        => true,
 		'hierarchical'       => false,
-		'supports'           => array( 'title', 'author', 'thumbnail', 'excerpt', 'comments' ),
+		'supports'           => array( 'title', 'author', 'thumbnail', 'excerpt', 'comments', 'custom-fields' ),
 	);
 
 	register_post_type( 'scrollie', $args );
+
+	register_post_meta(
+		'scrollie',
+		'scenes',
+		array(
+			'show_in_rest'      => true, // Make it available in the REST API
+			'single'            => true, // Single value per post
+			'type'              => 'string', // Type of the meta field
+			'sanitize_callback' => 'wp_kses_post', // Sanitize the input
+			'auth_callback'     => function () {
+				return current_user_can( 'edit_posts' ); // Capability check
+			},
+		)
+	);
+
+	register_post_meta(
+		'scrollie',
+		'sequences',
+		array(
+			'show_in_rest'      => true,
+			'single'            => true,
+			'type'              => 'string',
+			'sanitize_callback' => 'wp_kses_post',
+			'auth_callback'     => function () {
+				return current_user_can( 'edit_posts' );
+			},
+		)
+	);
 }
 add_action( 'init', 'create_scrollie_post_type' );
 
@@ -122,13 +150,13 @@ function display_scrollie_template() {
 
 // Customize admin links
 
-function customize_add_new_post_link( $url, $post_id ) {
+function customize_edit_post_link( $url, $post_id ) {
 	if ( 'scrollie' === get_post_type( $post_id ) ) {
 		$url = admin_url( 'edit.php?post_type=scrollie&page=maestro-scrollie-template&post=' . $post_id );
 	}
 	return $url;
 }
-add_filter( 'get_edit_post_link', 'customize_add_new_post_link', 10, 3 );
+add_filter( 'get_edit_post_link', 'customize_edit_post_link', 10, 3 );
 
 function remove_add_new_button() {
 	global $submenu;
