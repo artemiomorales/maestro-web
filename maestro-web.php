@@ -20,30 +20,21 @@
 
 // functions.php or custom plugin file
 function enqueue_react_app( $hook ) {
-	// Adjust the path to your React app's build files
-	wp_enqueue_script(
-		'react-app',
-		$file_url = plugins_url( 'dist/assets/index.js', __FILE__ ),
-		array(), // Dependencies, if any
-		null, // Version
-		true // Load in footer
-	);
-
-	wp_enqueue_style(
-		'react-app-style',
-		$file_url = plugins_url( 'dist/assets/index.css', __FILE__ ),
-		array(), // Dependencies, if any
-		null // Version
-	);
-
-	$screen = get_current_screen();
 	// Check if we are on the add or edit screen for the 'scrollie' post type
-	if ( 'scrollie' === $screen->post_type && ( 'post-new.php' === $hook || 'post.php' === $hook ) ) {
+	if ( isset( $_GET['page'] ) && 'maestro-scrollie-template' === $_GET['page'] ) {
 		wp_enqueue_script(
-			'maestro-web-admin-redirect',
-			plugins_url( 'dist/redirect.js', __FILE__ ),
-			array(), // Dependencies
+			'react-app',
+			$file_url = plugins_url( 'dist/assets/index.js', __FILE__ ),
+			array(), // Dependencies, if any
+			null, // Version
 			true // Load in footer
+		);
+
+		wp_enqueue_style(
+			'react-app-style',
+			$file_url = plugins_url( 'dist/assets/index.css', __FILE__ ),
+			array(), // Dependencies, if any
+			null // Version
 		);
 	}
 }
@@ -74,8 +65,8 @@ add_action( 'init', 'create_scrollie_post_type' );
 function add_scrollie_admin_page() {
 	add_submenu_page(
 		'edit.php?post_type=scrollie', // Parent slug (custom post type menu)
-		'Custom Template',         // Page title
-		'Custom Template',         // Menu title
+		'Maestro',         // Page title
+		'Add New Scrollie',         // Menu title
 		'manage_options',          // Capability
 		'maestro-scrollie-template',         // Menu slug
 		'display_scrollie_template'  // Callback function
@@ -99,6 +90,7 @@ function display_scrollie_template() {
 			<title>Vite + React + TS</title>
 		</head>
 		<body>
+			<h1>Maestro</h1>
 			<div id="root"></div>
 		</body>
 		</html>
@@ -106,3 +98,29 @@ function display_scrollie_template() {
 
 	echo wp_kses_post( $html_content );
 }
+
+
+// Customize admin links
+
+function customize_add_new_post_link( $url, $post_id, $context ) {
+	if ( 'scrollie' === get_post_type( $post_id ) ) {
+		$url = admin_url( 'edit.php?post_type=scrollie&page=maestro-scrollie-template&post=' . $post_id );
+	}
+	return $url;
+}
+add_filter( 'get_edit_post_link', 'customize_add_new_post_link', 10, 3 );
+
+function remove_add_new_button() {
+	global $submenu;
+	$post_type = 'scrollie';
+
+	// Remove "Add New" from the submenu
+	if ( isset( $submenu[ "edit.php?post_type={$post_type}" ] ) ) {
+		foreach ( $submenu[ "edit.php?post_type={$post_type}" ] as $key => $menu_item ) {
+			if ( in_array( 'post-new.php?post_type=' . $post_type, $menu_item ) ) {
+				unset( $submenu[ "edit.php?post_type={$post_type}" ][ $key ] );
+			}
+		}
+	}
+}
+add_action( 'admin_menu', 'remove_add_new_button', 999 );
