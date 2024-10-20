@@ -30,7 +30,6 @@ const App = () => {
       })
         .then(response => response.json())
         .then(data => {
-          console.log('post', data);
           setPostId(data.id);
 
           dispatch( setScene( JSON.parse(data.meta.scenes) as unknown as Scene ) );

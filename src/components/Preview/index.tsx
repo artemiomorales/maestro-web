@@ -83,7 +83,6 @@ const PreviewIframe = () => {
 
             // Do something with the message
             if (data.type === 'MODIFY_SEQUENCE' && data.payload.currentTime ) {
-                console.log('MODIFY_SEQUENCE', data.payload.currentTime);
                 dispatch( setCurrentTime(data.payload.currentTime) );
             }
         }

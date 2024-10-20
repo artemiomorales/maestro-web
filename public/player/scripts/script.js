@@ -1,5 +1,4 @@
 import { debounce, deepClone } from './utils.js';
-console.log('Script loaded');
 const stage = document.querySelector('.stage');
 
 let nodes = [];
@@ -98,8 +97,6 @@ function handleLoadSequence(remoteSequenceData) {
             }
         });
     }
-
-    console.log("nodes", nodes);
 }
 
 function modifyClips(clips) {
@@ -166,7 +163,6 @@ function processClip(currentNode, clip, time, index) {
 
         if (clip.volumeStart !== undefined && clip.volumeEnd !== undefined) {
             if(currentNode.isPlaying === false) {
-                console.log(currentNode);
                 currentNode.stageElement.play();
                 currentNode.isPlaying = true;
             }

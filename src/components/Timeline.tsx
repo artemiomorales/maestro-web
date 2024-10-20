@@ -37,9 +37,6 @@ const Timeline = () => {
 
   const selectedClips = useSelector(getSelectedClips);
 
-
-  console.log("selectedClips component", selectedClips);
-
 // console.log("selectedSequence", selectedSequence);
 // console.log("selectedClips", selectedClips);
 
