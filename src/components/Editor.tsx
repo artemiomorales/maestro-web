@@ -1,24 +1,26 @@
 import { useEffect, useRef, useState } from 'react';
 import Preview from './Preview';
 import Timeline from './Timeline';
-import Controls from './Controls';
 import Hierarchy from './Hierarchy';
 import Inspector from './Inspector';
 import {
     setTopLeftResizerDelta,
     setTopRightResizerDelta,
     setBottomResizerDelta,
+    setBottomLeftResizerDelta,
     setResizerActive
 } from '../redux/slices/windowSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { EditorContextProvider } from '../context/EditorContextProvider';
+import Project from './Project';
 
 const Editor = () => {
     const {
         resizerActive,
         topLeftResizerDelta,
         topRightResizerDelta,
-        bottomResizerDelta
+        bottomResizerDelta,
+        bottomLeftResizerDelta
     } = useSelector( (state: any) => state.window);
 
     const dispatch = useDispatch();
@@ -55,6 +57,10 @@ const Editor = () => {
             case "bottom":
             dispatch(setBottomResizerDelta( startYDrag - e.clientY));
             break;
+
+            case "bottomLeft":
+            dispatch(setBottomLeftResizerDelta( (startXDrag - e.clientX) * -1));
+            break;
         }
     }
 
@@ -65,7 +71,7 @@ const Editor = () => {
             topWidgetRef.current.style.flexBasis = `${topWidgetHeight - bottomResizerDelta}px`;
             topWidgetRef.current.style.height = `${topWidgetHeight - bottomResizerDelta}px`;
         }
-    }, [topLeftResizerDelta, topRightResizerDelta, bottomResizerDelta, resizerActive, bottomWidgetHeight, topWidgetHeight]);
+    }, [topLeftResizerDelta, topRightResizerDelta, bottomResizerDelta, bottomLeftResizerDelta, resizerActive, bottomWidgetHeight, topWidgetHeight]);
 
     const handleMouseUp = () => {
         dispatch(setResizerActive(null));
@@ -88,6 +94,7 @@ const Editor = () => {
                     <div className="resizer resizer-ew top-left-resizer"
                         onMouseDown={ (e) => {
                             dispatch(setResizerActive("topLeft"));
+                            dispatch(setTopLeftResizerDelta(0));
                             setStartXDrag(e.clientX);
                         }}
                     ></div>
@@ -95,6 +102,7 @@ const Editor = () => {
                     <div className="resizer resizer-ew top-right-resizer"
                         onMouseDown={ (e) => {
                             dispatch(setResizerActive("topRight"));
+                            dispatch(setTopRightResizerDelta(0));
                             setStartXDrag(e.clientX);
                         }}
                     ></div>
@@ -103,11 +111,19 @@ const Editor = () => {
                 <div className="resizer resizer-ns bottom-resizer"
                     onMouseDown={ (e) => {
                         dispatch(setResizerActive("bottom"));
+                        dispatch(setBottomResizerDelta(0));
                         setStartYDrag(e.clientY);
                     }}
                 ></div>
                 <div className="widget-bottom" ref={bottomWidgetRef}>
-                    <Controls />
+                    <Project />
+                    <div className="resizer resizer-ew bottom-left-resizer"
+                        onMouseDown={ (e) => {
+                            dispatch(setResizerActive("bottomLeft"));
+                            dispatch(setBottomLeftResizerDelta(0));
+                            setStartXDrag(e.clientX);
+                        }}
+                    ></div>
                     <Timeline />
                 </div>
             </div>

@@ -18,8 +18,9 @@ export interface WindowState {
     topLeftResizerDelta: number;
     topRightResizerDelta: number;
     bottomResizerDelta: number;
+    bottomLeftResizerDelta: number;
     previewWindowHeight: number;
-    resizerActive: "topLeft" | "topRight" | "bottom" | null;
+    resizerActive: "topLeft" | "topRight" | "bottom" | "bottomLeft" | null;
 }
 
 export interface Vector2 {

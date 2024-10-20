@@ -13,7 +13,6 @@ interface DraggingClipOffsets {
 
 type ClipAction = 'translate' | 'resizeStart' | 'resizeEnd';
 
-
 const Timeline = () => {
   const dispatch = useDispatch();
   const { previewIframeRef } = useContext(EditorContext);
@@ -25,23 +24,39 @@ const Timeline = () => {
   const [ interval, setInterval ] = useState<number>(30);
   const timelineRef = useRef<HTMLDivElement>(null);
   const clipWindowRef = useRef<HTMLTableCellElement>(null);
+  const [timelineWidth, setTimelineWidth] = useState<number>(0)
 
   const {
     scene,
     selectedSequence,
     currentTime,
     selectedTracks,
-} = useSelector( (state: RootState) => {
-  return state.editor;
-});
+  } = useSelector( (state: RootState) => {
+    return state.editor;
+  });
+
+  const {
+    resizerActive,
+    bottomLeftResizerDelta
+  } = useSelector( (state: any) => state.window);
 
   const selectedClips = useSelector(getSelectedClips);
 
-// console.log("selectedSequence", selectedSequence);
-// console.log("selectedClips", selectedClips);
 
-const approximatelyEqual = (v1: number, v2: number, epsilon = 0.001) =>
-  Math.abs(v1 - v2) < epsilon;
+  const approximatelyEqual = (v1: number, v2: number, epsilon = 0.001) =>
+    Math.abs(v1 - v2) < epsilon;
+
+  useEffect(() => {
+      if (timelineRef.current) {
+          setTimelineWidth(timelineRef.current.offsetWidth);
+      }
+  }, [ resizerActive ]);
+
+  useEffect(() => {
+      if (timelineRef.current && resizerActive === "bottomLeft") {
+          timelineRef.current.style.flexBasis = `${timelineWidth + (bottomLeftResizerDelta * -1 )}px`;
+      }
+  }, [resizerActive, timelineWidth, bottomLeftResizerDelta]);
 
   useEffect(() => {
     if (clipWindowRef.current && timelineRef.current) {

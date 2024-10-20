@@ -9,7 +9,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "watch-build": "nodemon --watch src --watch public --watch maestro-web.php --ext js,jsx,ts,tsx,php,scss --exec \"npm run build\""
+    "watch-build": "nodemon --watch src --watch public --watch maestro-web.php --ext js,jsx,ts,tsx,php,scss,css --exec \"npm run build\""
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.2.7",
