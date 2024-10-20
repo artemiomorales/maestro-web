@@ -1,10 +1,8 @@
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Editor from './components/Editor';
 import { setScene, setSelectedSequence } from './redux/slices/editorSlice';
-import sceneData from '../_example_project/scenes/scene.json';
-import sequenceData from '../_example_project/sequences/sequence1.json';
-import { Scene, Sequence } from './redux/types';
+import { RootState, Scene, Sequence } from './redux/types';
 import { useLocation } from 'react-router-dom';
 
 const App = () => {
@@ -12,6 +10,13 @@ const App = () => {
   const [postId, setPostId] = useState(null);
   const location = useLocation();
   const nonce = (window as Window).MaestroWebData?.nonce;
+
+  const {
+    scene,
+    selectedSequence,
+  } = useSelector( (state: RootState) => {
+    return state.editor;
+  });
 
   useEffect(() => {
 
@@ -45,8 +50,8 @@ const App = () => {
       <button onClick={() => {
         const jsonData = {
           meta: {
-            scenes: JSON.stringify(sceneData), // Convert JSON to string
-            sequences: JSON.stringify(sequenceData)
+            scenes: JSON.stringify(scene), // Convert JSON to string
+            sequences: JSON.stringify(selectedSequence)
           }
         };
 
